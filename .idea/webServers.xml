@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="2f097832-f8b9-4a84-8283-3dc4973f2414" name="阿里云" url="http://8.140.38.47">
+        <fileTransfer rootFolder="/usr/opt/module/tomcat/webapps" accessType="SFTP" host="8.140.38.47" port="22" sshConfigId="3ea47d6b-3ce7-4b80-8c20-483aabe6b753" sshConfig="root@8.140.38.47:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

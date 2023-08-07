@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -28,15 +29,28 @@ public class LoginServiceImpl implements LoginService {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("student_no",studentNo);
         User userCheck = userMapper.selectOne(queryWrapper);
+
+        Map<String,String> map = new HashMap<>();
+        if(userCheck==null){
+            map.put("message","用户名不存在");
+            return map;
+        }
+
+        if(!Objects.equals(userCheck.getPasswordReal(), password)){
+            map.put("message","密码错误");
+            return map;
+        }
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userCheck.getUsername(),password);
         Authentication authenicate = authenticationManager.authenticate(authenticationToken);//登录失败会自动处理
+        System.out.println("getDetails"+authenicate.getDetails());
         UserDetailsImpl loginUser = (UserDetailsImpl) authenicate.getPrincipal();
+
         User user = loginUser.getUser();
         String jwt = JwtUtil.createJWT(user.getId().toString());
 
-        Map<String,String> map = new HashMap<>();
-        map.put("error_message","success");
+
+        map.put("message","success");
         map.put("token",jwt);
         return map;
     }

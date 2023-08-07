@@ -2,9 +2,7 @@ package com.team.backend.controller.user.account;
 
 import com.team.backend.service.user.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -13,10 +11,8 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/v1/user/account/login/")
-    public Map<String,String>login(@RequestParam Map<String,String> map){
-        String studentNo = map.get("student_no");
-        String password = map.get("password");
-        return loginService.login(studentNo,password);
+    @PostMapping(value ="/v1/user/account/login/",consumes="application/json")
+    public Map<String,String>login(@RequestBody LoginUser user){
+        return loginService.login(user.getStudentNo(),user.getPassword());
     }
 }

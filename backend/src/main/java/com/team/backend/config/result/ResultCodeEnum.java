@@ -11,9 +11,13 @@ public enum ResultCodeEnum {
     SUCCESS(200,"成功"),
     FAIL(201, "失败"),
 
-    USER_NOT_EXIST(202,"用户不存在"),
+    USER_NOT_EXIST(2001,"用户不存在"),
 
-    USER_PASSWORD_WRONG(203,"用户密码错误"),
+    USER_PASSWORD_WRONG(2002,"用户密码错误"),
+    USER_NAME_NOT_EMPTY(2003,"用户不能为空"),
+    USER_NAME_ALREADY_EXIST(2004,"用户已存在"),
+    PASSWORD_NOT_EMPTY(2005,"密码不能为空"),
+    INPUT_PARAM_WRONG(2101,"输入参数有误"),
 
     SERVICE_ERROR(2012, "服务异常"),
     DATA_ERROR(204, "数据异常"),

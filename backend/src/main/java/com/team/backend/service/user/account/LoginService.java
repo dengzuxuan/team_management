@@ -1,4 +1,4 @@
-package com.team.backend.service.user;
+package com.team.backend.service.user.account;
 
 import com.team.backend.config.result.Result;
 

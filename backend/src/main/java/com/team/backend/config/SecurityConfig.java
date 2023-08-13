@@ -40,7 +40,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v1/user/account/login/", "/v1/user/account/register/").permitAll() //这两个是永久公开的
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
-
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

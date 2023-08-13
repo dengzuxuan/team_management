@@ -27,12 +27,17 @@ public class RegisterServiceImpl implements RegisterService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Result register(String studentNo) {
+    public Result register(String studentNo,String password,int role) {
         //23125205
         if(studentNo==null){
             return Result.build(null, ResultCodeEnum.USER_NAME_NOT_EMPTY);
         }
-        String password = studentNo.substring(2);
+        if(password==null){
+            password = studentNo.substring(2);
+        }
+        if(role==0){
+            role=3;
+        }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("student_no",studentNo);
         List<User> users = userMapper.selectList(queryWrapper);
@@ -42,7 +47,7 @@ public class RegisterServiceImpl implements RegisterService {
         String encodedPassword = passwordEncoder.encode(password);
         String defaultPhoto = "http://team-manager.oss-cn-beijing.aliyuncs.com/avatar/default.png?Expires=1691862660&OSSAccessKeyId=TMP.3Kdueco5wW2Er9yqgsfQ3DhsR7ndqUkzQjyvgyJG5VKArLgbkrsdE2bzeQvnBojaB6epKwvZLW1LqxPiLnKpxtqjYjjh3u&Signature=jPm8PHATDDNYm%2BuVzkly0oFNJ2s%3D";
         Date now = new Date();
-        User user = new User(null,studentNo,encodedPassword,null,null,2,defaultPhoto,parseInt(studentNo),password,now,now);
+        User user = new User(null,studentNo,encodedPassword,null,null,role,defaultPhoto,parseInt(studentNo),password,now,now);
         userMapper.insert(user);
         return Result.success(null);
     }

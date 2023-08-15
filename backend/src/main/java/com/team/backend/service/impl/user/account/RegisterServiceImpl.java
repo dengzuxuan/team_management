@@ -45,9 +45,9 @@ public class RegisterServiceImpl implements RegisterService {
             return Result.build(null, ResultCodeEnum.USER_NAME_ALREADY_EXIST);
         }
         String encodedPassword = passwordEncoder.encode(password);
-        String defaultPhoto = "http://team-manager.oss-cn-beijing.aliyuncs.com/avatar/default.png?Expires=1691862660&OSSAccessKeyId=TMP.3Kdueco5wW2Er9yqgsfQ3DhsR7ndqUkzQjyvgyJG5VKArLgbkrsdE2bzeQvnBojaB6epKwvZLW1LqxPiLnKpxtqjYjjh3u&Signature=jPm8PHATDDNYm%2BuVzkly0oFNJ2s%3D";
+        String defaultPhoto = "http://team-manager.oss-cn-beijing.aliyuncs.com/avatar/default.png";
         Date now = new Date();
-        User user = new User(null,studentNo,encodedPassword,null,null,role,defaultPhoto,parseInt(studentNo),password,now,now);
+        User user = new User(null,0,studentNo,encodedPassword,null,null,role,defaultPhoto,parseInt(studentNo),password,now,now);
         userMapper.insert(user);
         return Result.success(null);
     }

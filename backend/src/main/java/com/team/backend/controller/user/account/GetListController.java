@@ -4,7 +4,6 @@ import com.team.backend.config.result.Result;
 import com.team.backend.service.user.account.GetListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +12,7 @@ import java.util.Map;
 import static com.fasterxml.jackson.core.io.NumberInput.parseInt;
 
 @RestController
-public class GetList {
+public class GetListController {
     @Autowired
     GetListService getListService;
 

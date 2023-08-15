@@ -14,17 +14,22 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class User implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
+    private Integer leaderNo;
     private String username;
+
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private String password;
     private String phone;
     private String email;
     private int role;
     private String photo;
     private int studentNo;
+
+
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private String passwordReal;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date createTime;

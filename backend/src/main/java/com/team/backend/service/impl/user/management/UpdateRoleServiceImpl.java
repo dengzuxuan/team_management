@@ -28,6 +28,7 @@ public class UpdateRoleServiceImpl implements UpdateRoleService {
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
+
         if (user.getRole() != 1) {
             return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
@@ -43,7 +44,7 @@ public class UpdateRoleServiceImpl implements UpdateRoleService {
             return Result.build(null, ResultCodeEnum.USER_NAME_NOT_EXIST);
         }
 
-        if(user1.getLeaderNo()!=0 && parseInt(role)==2){
+        if(user1.getLeaderNo()!=0 && parseInt(role)==2 ){
             return Result.build(null, ResultCodeEnum.USER_ALREADY_IN_TEAM);
         }
 

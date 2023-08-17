@@ -20,6 +20,13 @@ public class GetTeamUsersServiceImpl implements GetTeamUsersService {
     public Result getTeamUsers(String StudentNo) {
         Map<String,Object> m1 = new HashMap<>();
         User userFind = getSingleInfo(StudentNo);
+
+        if(userFind.getLeaderNo()==0 && userFind.getRole()!=2){
+            m1.put("leader_infos",null);
+            m1.put("member_infos",null);
+            return Result.success(m1);
+        }
+
         if(userFind.getRole()==2){
             //组长
             m1.put("leader_infos",userFind);
@@ -50,8 +57,7 @@ public class GetTeamUsersServiceImpl implements GetTeamUsersService {
     }
     private User getSingleInfo(String StudentNo){
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("student_no","username","role").eq("student_no",StudentNo);
-        User user = userMapper.selectOne(queryWrapper);
-        return user;
+        queryWrapper.eq("student_no",StudentNo);
+        return userMapper.selectOne(queryWrapper);
     }
 }

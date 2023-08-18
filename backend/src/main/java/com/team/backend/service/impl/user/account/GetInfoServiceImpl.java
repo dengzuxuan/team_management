@@ -32,6 +32,7 @@ public class GetInfoServiceImpl implements GetInfoService {
         map.put("email",user.getEmail());
         map.put("role",user.getRole());
         map.put("avatar",user.getPhoto());
+        map.put("studentNo",user.getStudentNo());
 
         return Result.success(map);
     }

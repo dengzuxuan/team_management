@@ -1,13 +1,13 @@
-package com.team.backend.service.impl.user.management;
+package com.team.backend.service.impl.team.info;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
-import com.team.backend.mapper.UserMapper;
+import com.team.backend.mapper.TeamInfoMapper;
+import com.team.backend.pojo.TeamInfo;
 import com.team.backend.pojo.User;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
-import com.team.backend.service.user.account.GetListService;
-import com.team.backend.service.user.management.GetNoneListService;
+import com.team.backend.service.team.info.GetTeamInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,27 +15,30 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * 获取没有分配到小组中的组员
- */
 @Service
-public class GetNoneListServiceImpl implements GetNoneListService {
+public class GetTeamInfoServiceImpl implements GetTeamInfoService {
     @Autowired
-    UserMapper userMapper;
+    TeamInfoMapper teamInfoMapper;
+
     @Override
-    public Result getNoneList() {
+    public Result getTeamInfo() {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
-        System.out.println(user.getId());
-        if(user.getRole()!=1){
+
+        if(user.getRole()==1){
+            QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("admin_no",user.getStudentNo());
+            List<TeamInfo> teamInfos = teamInfoMapper.selectList(queryWrapper);
+            return Result.success(teamInfos);
+        }else if(user.getRole()==2){
+            QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("leader_no",user.getStudentNo());
+            TeamInfo teamInfos = teamInfoMapper.selectOne(queryWrapper);
+            return Result.success(teamInfos);
+        }else{
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
-
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("student_no","username").eq("leader_no","").eq("role",3);
-
-        return Result.success(userMapper.selectMaps(queryWrapper));
     }
 }

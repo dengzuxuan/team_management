@@ -13,6 +13,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
+/**
+ * 将组员踢出小组
+ */
 @Service
 public class DelMemberImpl implements DelMemberService {
 
@@ -23,7 +28,8 @@ public class DelMemberImpl implements DelMemberService {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
-        if(loginUser.getUser().getRole()!=1){
+        User adminUser = loginUser.getUser();
+        if(adminUser.getRole()!=1){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
@@ -35,17 +41,26 @@ public class DelMemberImpl implements DelMemberService {
             return Result.build(null,ResultCodeEnum.USER_NAME_NOT_EXIST);
         }
 
+        queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("student_no",user.getLeaderNo());
+        User leaderUser = userMapper.selectOne(queryWrapper);
+
+        if(!Objects.equals(leaderUser.getAdminNo(), adminUser.getStudentNo())){
+            return Result.build(null,ResultCodeEnum.USER_ADMIN_WRONG);
+        }
+
+
         if(user.getRole()!=3){
             return Result.build(null,ResultCodeEnum.USER_IS_LEADER);
         }
 
-        if(user.getLeaderNo()==0){
+        if("".equals(user.getLeaderNo())){
             return Result.build(null,ResultCodeEnum.USER_NOT_IN_TEAM);
         }
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("student_no",user.getStudentNo());
-        updateWrapper.set("leader_no",0);
+        updateWrapper.set("leader_no","");
 
         userMapper.update(null,updateWrapper);
 

@@ -18,6 +18,11 @@ public class RegisterController {
         private String studentNo;
         private String password;
         private int role;
+        private String username;
+
+        public RegisterUser() {
+        }
+
         public int getRole() {
             return role;
         }
@@ -27,12 +32,15 @@ public class RegisterController {
         public String getPassword() {
             return password;
         }
+        public String getUsername() {
+            return username;
+        }
 
     }
     @Autowired
     RegisterService registerService;
     @PostMapping(value="/v1/user/account/register/",consumes="application/json")
     public Result register(@RequestBody RegisterUser user){
-        return registerService.register(user.getStudentNo(),user.getPassword(),user.getRole());
+        return registerService.register(user.getStudentNo(),user.getPassword(),user.getRole(),user.getUsername());
     }
 }

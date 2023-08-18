@@ -7,9 +7,14 @@ import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.User;
+import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.user.account.GetListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class GetListServiceImpl implements GetListService {
@@ -18,19 +23,30 @@ public class GetListServiceImpl implements GetListService {
 
     @Override
     public Result getList(String range, int pageNum, int pageSize) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
+        User adminUser = loginUser.getUser();
+        if(adminUser.getRole()!=1){
+            return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
+        }
+
+
         Page<User> page = new Page<>(pageNum,pageSize);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         Page<User> rowPage = new Page<>();
+
         switch (range){
+
             case "member":
-                queryWrapper.eq("role",3).select(
+                queryWrapper.inSql("leader_no", "SELECT student_no FROM user WHERE admin_no = '" + adminUser.getStudentNo() +"'").select(
                         User.class,info->!info.getColumn().equals("password_real")
                         && !info.getColumn().equals("password")
                 );
                 rowPage = userMapper.selectPage(page, queryWrapper);
                 return Result.success(rowPage);
             case "leader":
-                queryWrapper.eq("role",2).select(
+                queryWrapper.eq("role",2).eq("admin_no",adminUser.getStudentNo()).select(
                         User.class,info->!info.getColumn().equals("password_real")
                                 && !info.getColumn().equals("password")
                 );

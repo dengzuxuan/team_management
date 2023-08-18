@@ -13,39 +13,57 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * 新增组员
+ */
 @Service
 public class AddMemberServiceImpl implements AddMemberService {
     @Autowired
     UserMapper userMapper;
 
     @Override
-    public Result addMember(String leaderStudentNo, String memberStudentNo) {
+    public Result addMember(String leaderStudentNo, String[] memberStudentNos) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
-        User user = loginUser.getUser();
-        if(user.getRole()!=1){
+        User adminUser = loginUser.getUser();
+
+        if(adminUser.getRole()!=1){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
+
         QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("student_no",leaderStudentNo);
-        List<User> users1= userMapper.selectList(queryWrapper1);
+        User leaderUser= userMapper.selectOne(queryWrapper1);
 
-        QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.eq("student_no",memberStudentNo);
-        List<User> users2= userMapper.selectList(queryWrapper1);
-
-        if(users1.isEmpty()||users2.isEmpty()){
-            return Result.build(null,ResultCodeEnum.USER_NAME_NOT_EXIST);
+        if(!Objects.equals(leaderUser.getAdminNo(), adminUser.getStudentNo())){
+            return Result.build(null,ResultCodeEnum.USER_ADMIN_WRONG);
         }
 
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("student_no",memberStudentNo);
-        updateWrapper.set("leader_no",leaderStudentNo);
+        for(String memberStudentNo:memberStudentNos){
+            QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
+            queryWrapper2.eq("student_no",memberStudentNo);
+            User memberUser= userMapper.selectOne(queryWrapper1);
+            if(leaderUser==null ||memberUser==null){
+                return Result.build(null,ResultCodeEnum.USER_NAME_NOT_EXIST);
+            }
+        }
 
-        userMapper.update(null,updateWrapper);
+        if(!Objects.equals(adminUser.getStudentNo(), leaderUser.getAdminNo())){
+            return Result.build(null,ResultCodeEnum.USER_ADMIN_WRONG);
+        }
+
+        for(String memberStudentNo:memberStudentNos){
+            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("student_no",memberStudentNo);
+            updateWrapper.set("leader_no",leaderStudentNo);
+
+            userMapper.update(null,updateWrapper);
+        }
         return Result.success(null);
     }
 }

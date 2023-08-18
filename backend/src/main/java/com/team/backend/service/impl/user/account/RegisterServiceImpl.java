@@ -7,6 +7,7 @@ import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.User;
 import com.team.backend.service.user.account.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -27,7 +28,10 @@ public class RegisterServiceImpl implements RegisterService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Result register(String studentNo,String password,int role) {
+    public Result register(String studentNo,String password,int role,String username) {
+        if(username==null){
+            username="";
+        }
         //23125205
         if(studentNo==null){
             return Result.build(null, ResultCodeEnum.USER_NAME_NOT_EMPTY);
@@ -47,7 +51,7 @@ public class RegisterServiceImpl implements RegisterService {
         String encodedPassword = passwordEncoder.encode(password);
         String defaultPhoto = "http://team-manager.oss-cn-beijing.aliyuncs.com/avatar/default.png";
         Date now = new Date();
-        User user = new User(null,0,studentNo,encodedPassword,null,null,role,defaultPhoto,parseInt(studentNo),password,now,now);
+        User user = new User(null,"","",username,encodedPassword,null,null,role,defaultPhoto,studentNo,password,now,now);
         userMapper.insert(user);
         return Result.success(null);
     }

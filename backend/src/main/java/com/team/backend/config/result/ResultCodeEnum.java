@@ -26,6 +26,7 @@ public enum ResultCodeEnum {
     USER_NOT_IN_TEAM(2012,"该用户目前未加入小组"),
     USER_IS_LEADER(2012,"该用户是组长，无法直接移除"),
     USER_CHANGE_WRONG(2013,"输入用户有误，无法实现组长切换"),
+    USER_ADMIN_WRONG(2013,"管理员无法对非自己所属组成员进行操作"),
     USER_ROLE_WRONG(2014,"输入用户角色有误"),
     INPUT_PARAM_WRONG(2101,"输入参数有误"),
     INPUT_EMAIL_PARAM_WRONG(2102,"输入email格式有误"),

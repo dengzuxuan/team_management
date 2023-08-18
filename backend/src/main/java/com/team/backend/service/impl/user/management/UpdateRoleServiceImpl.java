@@ -13,10 +13,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 import static java.lang.Integer.parseInt;
 
+/**
+ * UpdateRoleServiceImpl:更新用户角色信息
+ */
 @Service
 public class UpdateRoleServiceImpl implements UpdateRoleService {
     @Autowired
@@ -27,9 +28,9 @@ public class UpdateRoleServiceImpl implements UpdateRoleService {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
-        User user = loginUser.getUser();
+        User adminUser = loginUser.getUser();
 
-        if (user.getRole() != 1) {
+        if (adminUser.getRole() != 1) {
             return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
@@ -44,13 +45,18 @@ public class UpdateRoleServiceImpl implements UpdateRoleService {
             return Result.build(null, ResultCodeEnum.USER_NAME_NOT_EXIST);
         }
 
-        if(user1.getLeaderNo()!=0 && parseInt(role)==2 ){
+        if(!"".equals(user1.getLeaderNo()) && parseInt(role)==2 ){
             return Result.build(null, ResultCodeEnum.USER_ALREADY_IN_TEAM);
         }
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("student_no",studentNo);
         updateWrapper.set("role",parseInt(role));
+        if(role.equals("2")){
+            updateWrapper.set("admin_no",adminUser.getStudentNo());
+        }else if(role.equals("3")){
+            updateWrapper.set("admin_no","");
+        }
         userMapper.update(null,updateWrapper);
 
         return Result.success(null);

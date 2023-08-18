@@ -2,6 +2,8 @@ package com.team.backend.controller.user.management;
 
 
 import com.team.backend.config.result.Result;
+import com.team.backend.service.team.info.AddTeamService;
+import com.team.backend.service.team.info.GetTeamInfoService;
 import com.team.backend.service.user.management.UpdateRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,13 +14,22 @@ import java.util.Map;
 
 
 @RestController
-public class UpdateUserRoleController {
+public class AddLeaderController {
     @Autowired
     UpdateRoleService updateRoleService;
-    @PostMapping ("/v1/user/management/updaterole/")
+    @Autowired
+    AddTeamService addTeamService;
+    @PostMapping ("/v1/user/management/addleader/")
     public Result updateRole(@RequestParam Map<String,String> map){
-        String role = map.get("role");
         String studentNo = map.get("studentNo");
-        return updateRoleService.updateRole(studentNo,role);
+        //用户表变更
+        Result res =  updateRoleService.updateRole(studentNo,"2");
+
+        //小组表变更
+        if (res.getCode()==200){
+            res = addTeamService.addTeamService(studentNo);
+        }
+
+        return res;
     }
 }

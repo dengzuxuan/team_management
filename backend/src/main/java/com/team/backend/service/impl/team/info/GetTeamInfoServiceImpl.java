@@ -37,6 +37,11 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
             queryWrapper.eq("leader_no",user.getStudentNo());
             TeamInfo teamInfos = teamInfoMapper.selectOne(queryWrapper);
             return Result.success(teamInfos);
+        }else if(user.getRole()==3){
+            QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("leader_no",user.getLeaderNo());
+            TeamInfo teamInfos = teamInfoMapper.selectOne(queryWrapper);
+            return Result.success(teamInfos);
         }else{
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }

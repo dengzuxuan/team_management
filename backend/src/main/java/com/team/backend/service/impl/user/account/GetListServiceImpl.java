@@ -39,21 +39,21 @@ public class GetListServiceImpl implements GetListService {
         switch (range){
 
             case "member":
-                queryWrapper.inSql("leader_no", "SELECT student_no FROM user WHERE admin_no = '" + adminUser.getStudentNo() +"'").select(
+                queryWrapper.eq("admin_no",adminUser.getStudentNo()).eq("role",3).select(
                         User.class,info->!info.getColumn().equals("password_real")
                         && !info.getColumn().equals("password")
                 );
                 rowPage = userMapper.selectPage(page, queryWrapper);
                 return Result.success(rowPage);
             case "leader":
-                queryWrapper.eq("role",2).eq("admin_no",adminUser.getStudentNo()).select(
+                queryWrapper.eq("admin_no",adminUser.getStudentNo()).eq("role",2).select(
                         User.class,info->!info.getColumn().equals("password_real")
                                 && !info.getColumn().equals("password")
                 );
                 rowPage = userMapper.selectPage(page, queryWrapper);
                 return Result.success(rowPage);
             case "all":
-                queryWrapper.eq("role",2).or().eq("role",3).select(
+                queryWrapper.eq("admin_no",adminUser.getStudentNo()).select(
                         User.class,info->!info.getColumn().equals("password_real")
                                 && !info.getColumn().equals("password")
                 );

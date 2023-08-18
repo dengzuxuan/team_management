@@ -56,6 +56,7 @@ public class OssUtil {
             if (ossClient != null) {
                 ossClient.shutdown();
             }
+            inputStream.close();
         }
         String ossUrl = "http://team-manager.oss-cn-beijing.aliyuncs.com/avatar/"+avatarName;
         map.put("photo",ossUrl);

@@ -1,4 +1,4 @@
-package com.team.backend.service.impl.user.management;
+package com.team.backend.service.impl.user.account;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.team.backend.config.result.Result;
@@ -6,36 +6,29 @@ import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.User;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
-import com.team.backend.service.user.account.GetListService;
-import com.team.backend.service.user.management.GetNoneListService;
+import com.team.backend.service.user.account.GetSingleInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-/**
- * 获取没有分配到小组中的组员
- */
 @Service
-public class GetNoneListServiceImpl implements GetNoneListService {
+public class GetSingleInfoServiceImpl implements GetSingleInfoService {
     @Autowired
     UserMapper userMapper;
     @Override
-    public Result getNoneList() {
+    public Result getSingleInfo(String StudentNo) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
-        User adminUser = loginUser.getUser();
-
-        if(adminUser.getRole()!=1){
+        UserDetailsImpl loginUser  = (UserDetailsImpl)authenticationToken.getPrincipal();
+        if(loginUser.getUser().getRole()!=1){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("student_no","username").eq("leader_no","").eq("role",3).eq("admin_no",adminUser.getStudentNo());
+        queryWrapper.select("role","username","student_no").eq("student_no",StudentNo);
+        User user = userMapper.selectOne(queryWrapper);
 
-        return Result.success(userMapper.selectMaps(queryWrapper));
+        return Result.success(user);
     }
 }

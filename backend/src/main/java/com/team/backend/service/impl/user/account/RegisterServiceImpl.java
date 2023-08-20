@@ -5,8 +5,11 @@ import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.User;
+import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.user.account.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,12 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public Result register(String studentNo,String password,int role,String username) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
+        User adminUser = loginUser.getUser();
+
+        String adminNo = "";
         if(username==null){
             username="";
         }
@@ -41,6 +50,7 @@ public class RegisterServiceImpl implements RegisterService {
         }
         if(role==0){
             role=3;
+            adminNo = adminUser.getStudentNo();
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("student_no",studentNo);
@@ -51,7 +61,7 @@ public class RegisterServiceImpl implements RegisterService {
         String encodedPassword = passwordEncoder.encode(password);
         String defaultPhoto = "http://team-manager.oss-cn-beijing.aliyuncs.com/avatar/default.png";
         Date now = new Date();
-        User user = new User(null,"","",username,encodedPassword,null,null,role,defaultPhoto,studentNo,password,now,now);
+        User user = new User(null,"",adminNo,username,encodedPassword,null,null,role,defaultPhoto,studentNo,password,now,now);
         userMapper.insert(user);
         return Result.success(null);
     }

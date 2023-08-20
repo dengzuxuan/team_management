@@ -76,7 +76,7 @@ public class GetTeamUsersServiceImpl implements GetTeamUsersService {
     }
     private User getSingleInfo(String StudentNo){
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("student_no","username","role","admin_no").eq("student_no",StudentNo);
+        queryWrapper.select("student_no","username","role","admin_no","leader_no").eq("student_no",StudentNo);
         return userMapper.selectOne(queryWrapper);
     }
 }

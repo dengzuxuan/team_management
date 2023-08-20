@@ -52,11 +52,12 @@ public class UpdateRoleServiceImpl implements UpdateRoleService {
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("student_no",studentNo);
         updateWrapper.set("role",parseInt(role));
-        if(role.equals("2")){
-            updateWrapper.set("admin_no",adminUser.getStudentNo());
-        }else if(role.equals("3")){
-            updateWrapper.set("admin_no","");
-        }
+//        if(role.equals("2")){
+//            updateWrapper.set("admin_no",adminUser.getStudentNo());
+//        }
+//        else if(role.equals("3")){
+//            updateWrapper.set("admin_no","");
+//        }
         userMapper.update(null,updateWrapper);
 
         return Result.success(null);

@@ -52,31 +52,65 @@ public class GetTeamUsersServiceImpl implements GetTeamUsersService {
 
             //组员
             QueryWrapper<User> queryWrapperMember = new QueryWrapper<>();
-            queryWrapperMember.select("student_no","username").eq("leader_no",StudentNo);
+            queryWrapperMember.select(
+                    User.class,info->!info.getColumn().equals("password_real")
+                            && !info.getColumn().equals("password")
+            ).eq("leader_no",StudentNo);
             m1.put("member_infos",userMapper.selectMaps(queryWrapperMember));
 
         }else if(userFind.getRole()==3){
             //组员
             QueryWrapper<User> queryWrapperLeaderNo = new QueryWrapper<>();
-            queryWrapperLeaderNo.select("leader_no","student_no").eq("student_no",StudentNo);
+            queryWrapperLeaderNo.select(
+                    User.class,info->!info.getColumn().equals("password_real")
+                            && !info.getColumn().equals("password")
+            ).eq("student_no",StudentNo);
             User memberUser = userMapper.selectOne(queryWrapperLeaderNo);
 
             QueryWrapper<User> queryWrapperMember = new QueryWrapper<>();
-            queryWrapperMember.select("student_no","username").eq("leader_no",memberUser.getLeaderNo());
+            queryWrapperMember.select(
+                    User.class,info->!info.getColumn().equals("password_real")
+                            && !info.getColumn().equals("password")
+            ).eq("leader_no",memberUser.getLeaderNo());
             m1.put("member_infos",userMapper.selectMaps(queryWrapperMember));
 
             //组长
             QueryWrapper<User> queryWrapperLeader = new QueryWrapper<>();
-            queryWrapperLeader.select("student_no","username").eq("student_no",memberUser.getLeaderNo());
+            queryWrapperLeader.select(
+                    User.class,info->!info.getColumn().equals("password_real")
+                            && !info.getColumn().equals("password")
+            ).eq("student_no",memberUser.getLeaderNo());
             m1.put("leader_infos",userMapper.selectOne(queryWrapperLeader));
         }
 
 
         return Result.success(m1);
     }
+
+    @Override
+    public Result getTeamMember() {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
+        User user = loginUser.getUser();
+
+        QueryWrapper<User> queryWrapperMember = new QueryWrapper<>();
+        queryWrapperMember.select(
+                User.class,info->!info.getColumn().equals("password_real")
+                        && !info.getColumn().equals("password")
+        ).eq("leader_no",user.getStudentNo());
+
+        List<User> members = userMapper.selectList(queryWrapperMember);
+
+        return Result.success(members);
+    }
+
     private User getSingleInfo(String StudentNo){
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("student_no","username","role","admin_no","leader_no").eq("student_no",StudentNo);
+        queryWrapper.select(
+                User.class,info->!info.getColumn().equals("password_real")
+                        && !info.getColumn().equals("password")
+        ).eq("student_no",StudentNo);
         return userMapper.selectOne(queryWrapper);
     }
 }

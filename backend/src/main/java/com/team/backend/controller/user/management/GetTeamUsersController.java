@@ -21,4 +21,9 @@ public class GetTeamUsersController {
         String studentNo = m1.get("studentNo");
         return getTeamUsersService.getTeamUsers(studentNo);
     }
+
+    @GetMapping("/v1/user/management/getmemberinfos/")
+    public Result getTeamInfoSingle(){
+        return getTeamUsersService.getTeamMember();
+    }
 }

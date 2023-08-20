@@ -26,7 +26,10 @@ public class GetSingleInfoServiceImpl implements GetSingleInfoService {
         }
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("role","username","student_no").eq("student_no",StudentNo);
+        queryWrapper.select(
+                User.class,info->!info.getColumn().equals("password_real")
+                        && !info.getColumn().equals("password")
+        ).eq("student_no",StudentNo);
         User user = userMapper.selectOne(queryWrapper);
 
         return Result.success(user);

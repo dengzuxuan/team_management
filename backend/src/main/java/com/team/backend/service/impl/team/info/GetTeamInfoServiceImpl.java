@@ -21,29 +21,15 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
     TeamInfoMapper teamInfoMapper;
 
     @Override
-    public Result getTeamInfo() {
+    public Result getTeamInfo(String StudentNo) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
 
-        if(user.getRole()==1){
-            QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("admin_no",user.getStudentNo());
-            List<TeamInfo> teamInfos = teamInfoMapper.selectList(queryWrapper);
-            return Result.success(teamInfos);
-        }else if(user.getRole()==2){
-            QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("leader_no",user.getStudentNo());
-            TeamInfo teamInfos = teamInfoMapper.selectOne(queryWrapper);
-            return Result.success(teamInfos);
-        }else if(user.getRole()==3){
-            QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("leader_no",user.getLeaderNo());
-            TeamInfo teamInfos = teamInfoMapper.selectOne(queryWrapper);
-            return Result.success(teamInfos);
-        }else{
-            return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
-        }
+        QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("leader_no",StudentNo);
+        TeamInfo teamInfos = teamInfoMapper.selectOne(queryWrapper);
+        return Result.success(teamInfos);
     }
 }

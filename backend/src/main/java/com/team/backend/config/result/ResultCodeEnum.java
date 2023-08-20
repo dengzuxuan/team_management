@@ -31,6 +31,9 @@ public enum ResultCodeEnum {
     INPUT_PARAM_WRONG(2101,"输入参数有误"),
     INPUT_EMAIL_PARAM_WRONG(2102,"输入email格式有误"),
     INPUT_PHONE_PARAM_WRONG(2101,"输入电话格式有误"),
+    FILE_WRONG_EMPTY(2201,"文件无法正常读取或文件为空，请按格式填写"),
+    FILE_WRONG_REPEAT(2202,"文件中有学号已经存在平台中"),
+    FILE_WRONG_EMPTY_SINGLE(2203,"文件中有部分数据不全"),
 
     SERVICE_ERROR(2012, "服务异常"),
     DATA_ERROR(204, "数据异常"),

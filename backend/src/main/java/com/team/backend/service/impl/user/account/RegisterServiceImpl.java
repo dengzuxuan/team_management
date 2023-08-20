@@ -32,10 +32,6 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public Result register(String studentNo,String password,int role,String username) {
-        UsernamePasswordAuthenticationToken authenticationToken =
-                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
-        User adminUser = loginUser.getUser();
 
         String adminNo = "";
         if(username==null){
@@ -50,14 +46,20 @@ public class RegisterServiceImpl implements RegisterService {
         }
         if(role==0){
             role=3;
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
+            User adminUser = loginUser.getUser();
             adminNo = adminUser.getStudentNo();
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("student_no",studentNo);
         List<User> users = userMapper.selectList(queryWrapper);
+
         if(!users.isEmpty()){
             return Result.build(null, ResultCodeEnum.USER_NAME_ALREADY_EXIST);
         }
+
         String encodedPassword = passwordEncoder.encode(password);
         String defaultPhoto = "http://team-manager.oss-cn-beijing.aliyuncs.com/avatar/default.png";
         Date now = new Date();

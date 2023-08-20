@@ -43,4 +43,12 @@ public class RegisterController {
     public Result register(@RequestBody RegisterUser user){
         return registerService.register(user.getStudentNo(),user.getPassword(),user.getRole(),user.getUsername());
     }
+
+    @PostMapping(value="/v1/user/account/registermore/",consumes="application/json")
+    public Result registerMore(@RequestBody RegisterUser[] users){
+        for (RegisterUser user:users) {
+            registerService.register(user.getStudentNo(),user.getPassword(),0,user.getUsername());
+        }
+        return Result.success(null);
+    }
 }

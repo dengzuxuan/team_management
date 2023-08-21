@@ -48,7 +48,7 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
         List<RegisterUser> wrongUsers= new ArrayList<>();
         InputStream inputStream =null;
 
-        String usernameRegex = "^[1][3,4,5,7,8][0-9]{9}$";
+        String usernameRegex = "^([\\u4e00-\\u9fa5]{2,20}|[a-zA-Z.\\s]{2,20})$";
         Pattern usernamePatten = Pattern.compile(usernameRegex);
 
         String studentNoRegex = "\\d{8}";

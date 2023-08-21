@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class RegisterExcelServiceImpl implements RegisterExcelService {
@@ -45,6 +47,13 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
         List<RegisterUser> correctUsers= new ArrayList<>();
         List<RegisterUser> wrongUsers= new ArrayList<>();
         InputStream inputStream =null;
+
+        String usernameRegex = "^[1][3,4,5,7,8][0-9]{9}$";
+        Pattern usernamePatten = Pattern.compile(usernameRegex);
+
+        String studentNoRegex = "\\d{8}";
+        Pattern studentNoPatten = Pattern.compile(studentNoRegex);
+
         try {
             inputStream = file.getInputStream();
             EasyExcel.read(inputStream, DemoData.class, new PageReadListener<DemoData>(dataList -> {
@@ -55,20 +64,38 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
                 totalCnt = dataList.size();
 
                 for (DemoData demoData : dataList) {
-                    RegisterUser user = new RegisterUser();
-                    user.setUsername(demoData.getUsername());
-                    user.setStudentNo(demoData.getStudentNo());
+                    String studentNo = demoData.getStudentNo();
+                    String username = demoData.getUsername();
 
-                    if(demoData.getStudentNo()==null || demoData.getUsername()==null || demoData.getStudentNo().length()<3){
+                    Matcher studentNoMatcher = studentNoPatten.matcher(studentNo);
+                    Matcher usernameMatcher = usernamePatten.matcher(username);
+
+                    RegisterUser user = new RegisterUser();
+                    user.setUsername(username);
+                    user.setStudentNo(studentNo);
+
+                    if(username.length()==0 || studentNo.length()<6){
                         user.failReason=ResultCodeEnum.FILE_WRONG_EMPTY_SINGLE.getMessage();
                         wrongUsers.add(user);
                         continue;
                     }
 
-                    user.setPassword(demoData.getStudentNo().substring(2));
+                    if(!studentNoMatcher.matches()){
+                        user.failReason=ResultCodeEnum.INPUT_STUDENTNO_PARAM_WRONG.getMessage();
+                        wrongUsers.add(user);
+                        continue;
+                    }
+
+                    if(!usernameMatcher.matches()){
+                        user.failReason=ResultCodeEnum.INPUT_USRRNAME_PARAM_WRONG.getMessage();
+                        wrongUsers.add(user);
+                        continue;
+                    }
+
+                    user.setPassword(studentNo.substring(studentNo.length() - 6));
 
                     QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-                    queryWrapper.eq("student_no",demoData.getStudentNo());
+                    queryWrapper.eq("student_no",studentNo);
                     User userCheck = userMapper.selectOne(queryWrapper);
                     if(userCheck!=null){
                         user.failReason=ResultCodeEnum.FILE_WRONG_REPEAT.getMessage();

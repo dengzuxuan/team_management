@@ -58,13 +58,14 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
                     RegisterUser user = new RegisterUser();
                     user.setUsername(demoData.getUsername());
                     user.setStudentNo(demoData.getStudentNo());
-                    user.setPassword(demoData.getStudentNo().substring(2));
 
-                    if(demoData.getStudentNo()==null || demoData.getUsername()==null){
+                    if(demoData.getStudentNo()==null || demoData.getUsername()==null || demoData.getStudentNo().length()<3){
                         user.failReason=ResultCodeEnum.FILE_WRONG_EMPTY_SINGLE.getMessage();
                         wrongUsers.add(user);
                         continue;
                     }
+
+                    user.setPassword(demoData.getStudentNo().substring(2));
 
                     QueryWrapper<User> queryWrapper = new QueryWrapper<>();
                     queryWrapper.eq("student_no",demoData.getStudentNo());

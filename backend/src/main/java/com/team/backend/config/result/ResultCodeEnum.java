@@ -29,6 +29,7 @@ public enum ResultCodeEnum {
     USER_ADMIN_WRONG(2013,"管理员无法对非自己所属组成员进行操作"),
     USER_ROLE_WRONG(2014,"输入用户角色有误"),
     TEAM_NOT_EXIST(2015,"该小组不存在"),
+    PARAMS_WRONG(2016,"请输入正确参数"),
     INPUT_PARAM_WRONG(2101,"输入参数有误"),
     INPUT_EMAIL_PARAM_WRONG(2102,"输入email格式有误"),
     INPUT_PHONE_PARAM_WRONG(2101,"输入电话格式有误"),

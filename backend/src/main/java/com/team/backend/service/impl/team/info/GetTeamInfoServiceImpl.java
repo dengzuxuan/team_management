@@ -27,6 +27,15 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
 
+        if(StudentNo==null){
+            if(user.getRole()==2){ //组长
+                StudentNo = user.getStudentNo();
+            }else if(user.getRole()==3){ //组员
+                StudentNo = user.getLeaderNo();
+            } else if(user.getRole()==1){
+                return Result.build(null,ResultCodeEnum.PARAMS_WRONG);
+            }
+        }
         QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("leader_no",StudentNo);
         TeamInfo teamInfos = teamInfoMapper.selectOne(queryWrapper);

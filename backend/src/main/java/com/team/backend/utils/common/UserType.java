@@ -1,4 +1,4 @@
-package com.team.backend.service.impl.user.account;
+package com.team.backend.utils.common;
 
 
 import com.alibaba.excel.annotation.ExcelProperty;
@@ -9,7 +9,7 @@ import lombok.*;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class DemoData  {
+public class UserType {
     @ExcelProperty(index = 0)
     private int no;
 

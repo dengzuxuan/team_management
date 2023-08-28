@@ -9,6 +9,7 @@ import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.User;
 import com.team.backend.service.user.account.RegisterExcelService;
+import com.team.backend.utils.common.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -56,14 +57,14 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
 
         try {
             inputStream = file.getInputStream();
-            EasyExcel.read(inputStream, DemoData.class, new PageReadListener<DemoData>(dataList -> {
+            EasyExcel.read(inputStream, UserType.class, new PageReadListener<UserType>(dataList -> {
                 if(dataList==null){
                     resultCodeEnum=ResultCodeEnum.FILE_WRONG_EMPTY;
                 }
 
                 totalCnt = dataList.size();
 
-                for (DemoData demoData : dataList) {
+                for (UserType demoData : dataList) {
                     String studentNo = demoData.getStudentNo();
                     String username = demoData.getUsername();
 

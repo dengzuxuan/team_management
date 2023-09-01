@@ -50,8 +50,9 @@ public enum ResultCodeEnum {
     EQUIPMENT_HOSTREMARKS_PARAM_WRONG(2308,"设备主机备注参数有误"),
     EQUIPMENT_REMARK_PARAM_WRONG(2309,"设备备注参数有误"),
     EQUIPMENT_ORIGINAL_VALUE_PARAM_WRONG(2310,"设备原值参数有误"),
-    EQUIPMENT_NOT_EXIST(2311,"设备编号不存在"),
+    EQUIPMENT_NOT_EXIST(2311,"该设备不存在"),
 
+    EQUIPMENT_ERCORD_NOT_REPEAT(2312,"无法多次申请同一设备，请先撤销原申请"),
     SERVICE_ERROR(2012, "服务异常"),
     DATA_ERROR(204, "数据异常"),
     ILLEGAL_REQUEST(205, "非法请求"),

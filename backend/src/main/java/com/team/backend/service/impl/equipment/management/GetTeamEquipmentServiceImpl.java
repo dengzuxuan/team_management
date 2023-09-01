@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.team.backend.config.result.Result;
 import com.team.backend.mapper.EquipmentMapper;
+import com.team.backend.mapper.EquipmentRecordMapper;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.Equipment;
+import com.team.backend.pojo.EquipmentRecord;
 import com.team.backend.pojo.User;
 import com.team.backend.service.equipment.management.GetTeamEquipmentService;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
@@ -28,6 +30,8 @@ public class GetTeamEquipmentServiceImpl implements GetTeamEquipmentService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private EquipmentRecordMapper equipmentRecordMapper;
     @Override
     public Result getTeamEquipment(int pageNum, int pageSize) {
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -58,6 +62,11 @@ public class GetTeamEquipmentServiceImpl implements GetTeamEquipmentService {
             userQueryWrapper2.select("student_no","username").eq("student_no",equipment.getFormerRecipient());
             User formerRecipent =  userMapper.selectOne(userQueryWrapper2);
 
+
+            QueryWrapper<EquipmentRecord> equipmentRecordQueryWrapper = new QueryWrapper<>();
+            equipmentRecordQueryWrapper.eq("equipment_id",equipment.getId()).eq("status",2);
+            List<EquipmentRecord> record = equipmentRecordMapper.selectList(equipmentRecordQueryWrapper);
+
             equipmentPageType pageType = new equipmentPageType(
                     equipment.getId(),
                     equipment.getSerialNumber(),
@@ -70,6 +79,7 @@ public class GetTeamEquipmentServiceImpl implements GetTeamEquipmentService {
                     equipment.getHostRemarks(),
                     equipment.getRemark(),
                     equipment.getState(),
+                    record.size(),
                     recipent,
                     formerRecipent
             );

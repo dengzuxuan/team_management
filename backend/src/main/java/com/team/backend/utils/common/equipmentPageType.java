@@ -23,6 +23,7 @@ public class equipmentPageType implements Serializable {
     private String hostRemarks;
     private String remark;
     private Integer state;
+    private Integer applyNumber;
 
     private Object formerRecipient;
     private Object recipient;

@@ -61,6 +61,7 @@ public class AddEquipmentExcelServiceImpl implements AddEquipmentExcelService {
         }
 
         try {
+            totalCnt = 0;
             inputStream = file.getInputStream();
             EasyExcel.read(inputStream, equipmentType.class, new PageReadListener<equipmentType>(dataList -> {
                 totalCnt += dataList.size();
@@ -97,6 +98,6 @@ public class AddEquipmentExcelServiceImpl implements AddEquipmentExcelService {
         res.put("wrongEquipment",wrongEquipment);
 
         serialNumberMap.clear();
-        return Result.build(res,resultCodeEnum);
+        return Result.build(res,ResultCodeEnum.SUCCESS);
     }
 }

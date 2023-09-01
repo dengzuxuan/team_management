@@ -47,6 +47,7 @@ public class AddEquipmentServiceImpl implements AddEquipmentService {
         if(rescode!=ResultCodeEnum.SUCCESS){
             return Result.build(null,rescode);
         }
+
         Date now = new Date();
         Equipment newEquipment = new Equipment(
                 null,
@@ -99,7 +100,7 @@ public class AddEquipmentServiceImpl implements AddEquipmentService {
         if(version == null || version.length()>=50 || version.length()==0){
             return ResultCodeEnum.EQUIPMENT_VERSION_PARAM_WRONG;
         }
-        if(originalValue.length()>=50){
+        if(originalValue != null && originalValue.length()>=50){
             return ResultCodeEnum.EQUIPMENT_ORIGINAL_VALUE_PARAM_WRONG;
         }
         if(performanceIndex!=null && performanceIndex.length()>=255){

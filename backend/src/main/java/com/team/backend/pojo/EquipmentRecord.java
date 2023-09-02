@@ -22,5 +22,7 @@ public class EquipmentRecord {
     private Date deadlineTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date applyTime;
+    private String checkNo;
+    private String refuseReason;
     private Integer status;
 }

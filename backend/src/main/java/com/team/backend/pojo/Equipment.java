@@ -25,7 +25,7 @@ public class Equipment implements Serializable {
     private String warehouseEntrytime;
     private String hostRemarks;
     private String remark;
-    private Integer state;
+    private Integer status;
     private String adminNo;
     private String creator;
     private String recipient;

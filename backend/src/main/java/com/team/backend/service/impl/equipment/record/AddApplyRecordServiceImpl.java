@@ -60,6 +60,8 @@ public class AddApplyRecordServiceImpl implements AddApplyRecordService {
                 reason,
                 record.getDeadlineTime(),
                 now,
+                null,
+                null,
                 2
         );
         equipmentRecordMapper.insert(newEquipmentRecord);

@@ -9,6 +9,7 @@ import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.Equipment;
 import com.team.backend.pojo.EquipmentRecord;
 import com.team.backend.pojo.User;
+import com.team.backend.service.equipment.management.GetEquipmentInfoService;
 import com.team.backend.service.equipment.management.GetTeamEquipmentService;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.utils.common.equipmentPageType;
@@ -26,8 +27,10 @@ import java.util.Map;
 @Service
 public class GetTeamEquipmentServiceImpl implements GetTeamEquipmentService {
     @Autowired
-    private EquipmentMapper equipmentMapper;
+    private GetEquipmentInfoService getEquipmentInfoService;
 
+    @Autowired
+    private EquipmentMapper equipmentMapper;
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -54,6 +57,8 @@ public class GetTeamEquipmentServiceImpl implements GetTeamEquipmentService {
 
         List<Equipment> equipmentList = rowPages.getRecords();
         for (Equipment equipment: equipmentList) {
+            getEquipmentInfoService.updateEquipmentAndRecord(equipment.getId());
+
             QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
             userQueryWrapper.select("student_no","username").eq("student_no",equipment.getRecipient());
             User recipent =  userMapper.selectOne(userQueryWrapper);
@@ -78,7 +83,7 @@ public class GetTeamEquipmentServiceImpl implements GetTeamEquipmentService {
                     equipment.getWarehouseEntrytime(),
                     equipment.getHostRemarks(),
                     equipment.getRemark(),
-                    equipment.getState(),
+                    equipment.getStatus(),
                     record.size(),
                     recipent,
                     formerRecipent

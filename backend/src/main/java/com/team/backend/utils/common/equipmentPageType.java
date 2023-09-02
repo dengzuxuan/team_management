@@ -22,7 +22,7 @@ public class equipmentPageType implements Serializable {
     private String warehouseEntryTime;
     private String hostRemarks;
     private String remark;
-    private Integer state;
+    private Integer status;
     private Integer applyNumber;
 
     private Object formerRecipient;

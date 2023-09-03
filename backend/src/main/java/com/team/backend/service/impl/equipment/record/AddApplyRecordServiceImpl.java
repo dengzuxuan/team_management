@@ -9,6 +9,7 @@ import com.team.backend.pojo.Equipment;
 import com.team.backend.pojo.EquipmentRecord;
 import com.team.backend.pojo.User;
 import com.team.backend.service.equipment.record.AddApplyRecordService;
+import com.team.backend.service.equipment.record.CheckApplySerive;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.utils.common.RecordType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class AddApplyRecordServiceImpl implements AddApplyRecordService {
     EquipmentMapper equipmentMapper;
     @Autowired
     EquipmentRecordMapper equipmentRecordMapper;
+
+    @Autowired
+    CheckApplySerive checkApplySerive;
 
     @Override
     public Result addApplyRecord(RecordType record) {
@@ -65,6 +69,11 @@ public class AddApplyRecordServiceImpl implements AddApplyRecordService {
                 2
         );
         equipmentRecordMapper.insert(newEquipmentRecord);
+        //管理员自动审核通过
+        if(user.getRole()==1){
+            checkApplySerive.checkApplySerive(newEquipmentRecord.getId(),"pass","");
+        }
+
         return Result.success(null);
     }
 }

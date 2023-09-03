@@ -105,7 +105,7 @@ public class GetEquipmentInfoServiceImpl implements GetEquipmentInfoService {
             recordQueryWrapper.eq("equipment_id",equipmentId).eq("status",2);
             List<EquipmentRecord> equipmentRecords = equipmentRecordMapper.selectList(recordQueryWrapper);
             for (EquipmentRecord equipmentRecord:equipmentRecords) {
-                if(equipmentRecord!=null){
+                if(equipmentRecord!=null && equipmentRecord.getDeadlineTime()!=null){
                     //归还时间(deadlineTime早于当前时间)
                     if(equipmentRecord.getDeadlineTime().compareTo(now)<0){
                         //以及更新记录

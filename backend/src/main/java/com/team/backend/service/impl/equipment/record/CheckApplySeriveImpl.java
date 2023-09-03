@@ -32,7 +32,7 @@ public class CheckApplySeriveImpl implements CheckApplySerive {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
 
-        if(user.getRole()!=2 && user.getRole()!=3){
+        if(user.getRole()!=2 && user.getRole()!=1){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 

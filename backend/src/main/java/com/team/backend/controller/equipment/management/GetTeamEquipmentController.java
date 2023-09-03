@@ -16,7 +16,7 @@ public class GetTeamEquipmentController {
     @Autowired
     GetTeamEquipmentService getTeamEquipmentService;
 
-    @GetMapping("/v1/equipment/management/getteameuipments/")
+    @GetMapping("/v1/equipment/management/getteamequipments/")
     public Result getTeamEquipments(@RequestParam Map<String,String> map){
         int pageNum = parseInt(map.get("pageNum")) ;
         int pageSize = parseInt(map.get("pageSize"));

@@ -85,8 +85,8 @@ public class GetTeamEquipmentServiceImpl implements GetTeamEquipmentService {
                     equipment.getRemark(),
                     equipment.getStatus(),
                     record.size(),
-                    recipent,
-                    formerRecipent
+                    formerRecipent,
+                    recipent
             );
             equipmentPageTypes.add(pageType);
         }

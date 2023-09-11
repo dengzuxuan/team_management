@@ -9,7 +9,7 @@ import com.team.backend.pojo.Equipment;
 import com.team.backend.pojo.EquipmentRecord;
 import com.team.backend.pojo.User;
 import com.team.backend.service.equipment.record.AddApplyRecordService;
-import com.team.backend.service.equipment.record.CheckApplySerive;
+import com.team.backend.service.equipment.record.CheckApplyService;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.utils.common.RecordType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class AddApplyRecordServiceImpl implements AddApplyRecordService {
     EquipmentRecordMapper equipmentRecordMapper;
 
     @Autowired
-    CheckApplySerive checkApplySerive;
+    CheckApplyService checkApplySerive;
 
     @Override
     public Result addApplyRecord(RecordType record) {

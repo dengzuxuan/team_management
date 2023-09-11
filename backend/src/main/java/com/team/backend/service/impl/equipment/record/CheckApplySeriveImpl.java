@@ -9,7 +9,7 @@ import com.team.backend.mapper.EquipmentRecordMapper;
 import com.team.backend.pojo.Equipment;
 import com.team.backend.pojo.EquipmentRecord;
 import com.team.backend.pojo.User;
-import com.team.backend.service.equipment.record.CheckApplySerive;
+import com.team.backend.service.equipment.record.CheckApplyService;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CheckApplySeriveImpl implements CheckApplySerive {
+public class CheckApplySeriveImpl implements CheckApplyService {
     @Autowired
     EquipmentRecordMapper equipmentRecordMapper;
 
@@ -63,7 +63,7 @@ public class CheckApplySeriveImpl implements CheckApplySerive {
             //设备状态记录修订
             UpdateWrapper<Equipment> equipmentUpdateWrapper = new UpdateWrapper<>();
             equipmentUpdateWrapper.eq("id",equipmentRecord.getEquipmentId());
-            equipmentUpdateWrapper.set("status",2);
+            equipmentUpdateWrapper.set("status",2).set("recipient",equipmentRecord.getStudentNo());
             equipmentMapper.update(null,equipmentUpdateWrapper);
 
         }else if("refuse".equals(status)){

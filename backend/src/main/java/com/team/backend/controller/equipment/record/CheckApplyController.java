@@ -2,7 +2,7 @@ package com.team.backend.controller.equipment.record;
 
 
 import com.team.backend.config.result.Result;
-import com.team.backend.service.equipment.record.CheckApplySerive;
+import com.team.backend.service.equipment.record.CheckApplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,7 +13,7 @@ import java.util.Map;
 @RestController
 public class CheckApplyController {
     @Autowired
-    CheckApplySerive checkApplySerive;
+    CheckApplyService checkApplySerive;
 
     @PostMapping("/v1/equipment/record/checkrecord/")
     public Result checkApply(@RequestParam Map<String,String>map){

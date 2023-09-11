@@ -8,49 +8,34 @@ import com.team.backend.pojo.EquipmentRecord;
 import com.team.backend.pojo.User;
 import com.team.backend.service.equipment.management.GetEquipmentInfoService;
 import com.team.backend.service.equipment.record.GetApplyRecordService;
-import com.team.backend.service.impl.utils.UserDetailsImpl;
+import com.team.backend.service.equipment.record.GetEquipmentRecordService;
 import com.team.backend.utils.common.RecordShowType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 @Service
-public class GetApplyRecordServiceImpl implements GetApplyRecordService {
-    @Autowired
-    private GetEquipmentInfoService getEquipmentInfoService;
-
+public class GetEquipmentRecordServiceImpl implements GetEquipmentRecordService {
     @Autowired
     EquipmentRecordMapper equipmentRecordMapper;
-
+    @Autowired
+    GetEquipmentInfoService getEquipmentInfoService;
     @Autowired
     UserMapper userMapper;
+
     @Override
-    public Result getApplyRecord() {
-        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
-        User user = loginUser.getUser();
-
-        QueryWrapper<EquipmentRecord> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("student_no",user.getStudentNo());
-        List<EquipmentRecord> equipmentRecordList = equipmentRecordMapper.selectList(queryWrapper);
-
-        for (EquipmentRecord record:equipmentRecordList) {
-            getEquipmentInfoService.updateEquipmentAndRecord(record.getEquipmentId());
-        }
-
-        List<EquipmentRecord> equipmentRecordList2 = equipmentRecordMapper.selectList(queryWrapper);
-        //倒排
-        Collections.reverse(equipmentRecordList2);
+    public Result getEquipmentRecord(int equipmentid) {
+        QueryWrapper<EquipmentRecord> equipmentRecordQueryWrapper = new QueryWrapper<>();
+        equipmentRecordQueryWrapper.eq("equipment_id",equipmentid).eq("status",2);
+        List<EquipmentRecord> equipmentRecordList = equipmentRecordMapper.selectList(equipmentRecordQueryWrapper);
+        Collections.reverse(equipmentRecordList);
 
         List<RecordShowType> recordShowTypes = new ArrayList<>();
 
-        for (EquipmentRecord record:equipmentRecordList2) {
+        for (EquipmentRecord record:equipmentRecordList) {
             QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
             queryWrapper2.select(
                     User.class,info->!info.getColumn().equals("password_real")
@@ -78,7 +63,6 @@ public class GetApplyRecordServiceImpl implements GetApplyRecordService {
             );
             recordShowTypes.add(recordShowType);
         }
-
         return Result.success(recordShowTypes);
     }
 }

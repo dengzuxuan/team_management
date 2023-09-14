@@ -33,7 +33,6 @@ public class AddWeeklyReportServiceImpl implements AddWeeklyReportService {
         WeeklyReport weeklyReportFind = weeklyReportMapper.selectOne(queryWrapper);
         int teamworkDuration = 0;
         Date now = new Date();
-        String teamworkJsonInfos = JsonUtil.ReportToJsonString(reportInfo.getTeamWorks());
         for (TeamWorks teamWorks:reportInfo.getTeamWorks()) {
             teamworkDuration+=teamWorks.getDuration();
         }
@@ -42,9 +41,10 @@ public class AddWeeklyReportServiceImpl implements AddWeeklyReportService {
                 reportInfo.getTime(),
                 reportInfo.getYear(),
                 reportInfo.getMonth(),
-                reportInfo.getWeekPlanHtml(),
-                reportInfo.getWeekPlanHtml(),
-                teamworkJsonInfos,
+                reportInfo.getWeek(),
+                JsonUtil.WeekProgressToJsonString(reportInfo.getWeekProgress()),
+                JsonUtil.WeekPlanToJsonString(reportInfo.getWeekPlan()),
+                JsonUtil.ReportToJsonString(reportInfo.getTeamWorks()),
                 teamworkDuration,
                 user.getStudentNo(),
                 null,
@@ -53,6 +53,7 @@ public class AddWeeklyReportServiceImpl implements AddWeeklyReportService {
         if(weeklyReportFind==null){
             //新建周报
             weeklyReport.setCreateTime(now);
+            weeklyReport.setUpdateTime(now);
             weeklyReportMapper.insert(weeklyReport);
         }else{
             //更新周报

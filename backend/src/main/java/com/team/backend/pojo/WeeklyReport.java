@@ -18,8 +18,9 @@ public class WeeklyReport implements Serializable {
     private String time;
     private String year;
     private String month;
-    private String weekPlanHtml;
-    private String nextWeekHtml;
+    private String week;
+    private String weekProgress;
+    private String weekPlan;
     private String teamworkInfos;
     private Integer teamworkDuration;
     private String studentNo;

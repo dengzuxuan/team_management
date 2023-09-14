@@ -17,7 +17,7 @@ public class GetUserAllReportController {
     GetUserAllReportServiceImpl getUserAllReportService;
 
     @GetMapping("/v1/report/management/getuserallreport/")
-    Result getUserAllReport(@RequestParam Map<String,String>m1){
+    public Result getUserAllReport(@RequestParam Map<String,String>m1){
         String studentNo = m1.get("studentno");
         int pageNum = Integer.parseInt(m1.get("pageNum"));
         int pageSize = Integer.parseInt(m1.get("pageSize"));

@@ -9,12 +9,11 @@ import com.team.backend.pojo.WeeklyReport;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.report.management.GetWeeklyReportService;
 import com.team.backend.utils.JsonUtil;
-import com.team.backend.utils.SortUtilForList;
+import com.team.backend.utils.ReportSortUtil;
 import com.team.backend.utils.common.WeeklyReportType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -65,10 +64,9 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
             );
             weeklyReportTypeLists.add(weeklyReportType);
         }
+        ReportSortUtil.ReportSortUtilForList reportSortUtilForList = new ReportSortUtil.ReportSortUtilForList();
 
-        SortUtilForList sortUtilForList = new SortUtilForList();
-
-        Collections.sort(weeklyReportTypeLists,sortUtilForList);
+        Collections.sort(weeklyReportTypeLists, reportSortUtilForList);
         res.put("weeklyReports",weeklyReportTypeLists);
         res.put("total",rowPages.getTotal());
         res.put("size",rowPages.getSize());

@@ -5,6 +5,7 @@ import com.team.backend.config.result.Result;
 import com.team.backend.mapper.WeeklyReportMapper;
 import com.team.backend.pojo.User;
 import com.team.backend.pojo.WeeklyReport;
+import com.team.backend.service.impl.report.teamwork.ManageTeamWorkServiceImpl;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.report.management.AddWeeklyReportService;
 import com.team.backend.utils.JsonUtil;
@@ -21,6 +22,9 @@ import java.util.Date;
 public class AddWeeklyReportServiceImpl implements AddWeeklyReportService {
     @Autowired
     WeeklyReportMapper weeklyReportMapper;
+
+    @Autowired
+    ManageTeamWorkServiceImpl manageTeamWorkService;
 
     @Override
     public Result addWeeklyReport(WeeklyReportType reportInfo) {
@@ -50,6 +54,7 @@ public class AddWeeklyReportServiceImpl implements AddWeeklyReportService {
                 null,
                 null
         );
+
         if(weeklyReportFind==null){
             //新建周报
             weeklyReport.setCreateTime(now);
@@ -61,6 +66,9 @@ public class AddWeeklyReportServiceImpl implements AddWeeklyReportService {
             weeklyReport.setUpdateTime(now);
             weeklyReportMapper.updateById(weeklyReport);
         }
+
+        reportInfo.setId(weeklyReport.getId());
+        manageTeamWorkService.addTeamWork(reportInfo);
         return Result.success(null);
     }
 }

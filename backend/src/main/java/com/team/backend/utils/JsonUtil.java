@@ -2,10 +2,7 @@ package com.team.backend.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.team.backend.utils.common.TeamWorks;
-import com.team.backend.utils.common.WeekPlanType;
-import com.team.backend.utils.common.WeekProgressType;
-import com.team.backend.utils.common.WeeklyReportType;
+import com.team.backend.utils.common.*;
 
 import java.util.List;
 
@@ -31,5 +28,12 @@ public class JsonUtil {
     }
     public static WeekPlanType JsonToWeekPlan(String planJsonString){
         return JSONObject.parseObject(planJsonString,WeekPlanType.class);
+    }
+
+    public static String attachToJsonString(List<Attach> attachs){
+        return JSONObject.toJSONString(attachs);
+    }
+    public static List<Attach> JsonStringToAttach(String attach){
+        return JSONObject.parseArray(attach,Attach.class);
     }
 }

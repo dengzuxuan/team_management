@@ -13,7 +13,7 @@ public class GetUserTimeReportController {
     @Autowired
     GetUserTimeReportServiceImpl getUserTimeReportService;
 
-    @GetMapping(value = "/v1/report/management/getusertimereport/",consumes="application/json")
+    @PostMapping(value = "/v1/report/management/getusertimereport/",consumes="application/json")
     public Result getUserTimeReport(@RequestBody WeeklyGetReportType getReportInfo,@RequestParam Map<String,String> m1){
         int pageNum = Integer.parseInt(m1.get("pageNum"));
         int pageSize = Integer.parseInt(m1.get("pageSize"));

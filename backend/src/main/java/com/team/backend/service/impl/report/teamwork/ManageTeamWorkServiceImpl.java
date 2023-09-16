@@ -67,20 +67,19 @@ public class ManageTeamWorkServiceImpl implements ManageTeamWorkService {
         int endWeek = getReportInfo.getEndTimeInfo().getWeek();
 
         QueryWrapper<ReportTeamWork> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("student_no",getReportInfo.getStudentNo());
 
         if (startYear == endYear) {
-            queryWrapper.ge("week",startWeek).le("week",endWeek);
+            queryWrapper.eq("student_no",getReportInfo.getStudentNo()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
         }else if(startYear<endYear){
             //跨年
             //2022 23 - 2023 10
             for (int i = startYear; i <= endYear ; i++) {
                 if(i==startYear){
-                    queryWrapper.eq("year",i).ge("week",startWeek);
+                    queryWrapper.eq("student_no",getReportInfo.getStudentNo()).eq("year",i).ge("week",startWeek);
                 }else if(i==endYear){
-                    queryWrapper.or().eq("year",i).le("week",endWeek);
+                    queryWrapper.or().eq("student_no",getReportInfo.getStudentNo()).eq("year",i).le("week",endWeek);
                 }else{
-                    queryWrapper.or().eq("year",i);
+                    queryWrapper.or().eq("student_no",getReportInfo.getStudentNo()).eq("year",i);
                 }
             }
         }

@@ -48,15 +48,19 @@ public class AddReportCommentServiceImpl implements AddReportCommentService {
         User reportUser = userMapper.selectOne(queryWrapper);
 
         if(user.getRole()==1){
+            roleGroup = 1;
             if(!Objects.equals(reportUser.getAdminNo(), user.getStudentNo())){
                 return Result.build(null, ResultCodeEnum.REPORT_COMMENT_NOT_ADMIN);
             }
-            roleGroup = 1;
         }else if(user.getRole()==2){
-            if(!Objects.equals(reportUser.getLeaderNo(), user.getStudentNo()) && !Objects.equals(user.getStudentNo(), reportUser.getStudentNo())){
-                return Result.build(null, ResultCodeEnum.REPORT_COMMENT_NOT_LEADER);
-            }
             roleGroup = 2;
+            if(!Objects.equals(reportUser.getLeaderNo(), user.getStudentNo())){
+                if(Objects.equals(user.getStudentNo(), reportUser.getStudentNo())){
+                    roleGroup = 1;
+                }else{
+                    return Result.build(null, ResultCodeEnum.REPORT_COMMENT_NOT_LEADER);
+                }
+            }
         }else{
             if(!Objects.equals(reportUser.getStudentNo(), user.getStudentNo())){
                 return Result.build(null, ResultCodeEnum.REPORT_COMMENT_NOT_MEMBER);

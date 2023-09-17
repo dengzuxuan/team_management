@@ -12,14 +12,18 @@ import com.team.backend.mapper.WeeklyReportMapper;
 import com.team.backend.pojo.ReportComment;
 import com.team.backend.pojo.User;
 import com.team.backend.pojo.WeeklyReport;
+import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.report.comment.GetReportCommentService;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class GetReportCommentServiceImpl implements GetReportCommentService {
@@ -37,6 +41,9 @@ public class GetReportCommentServiceImpl implements GetReportCommentService {
             return Result.build(null, ResultCodeEnum.REPORT_NOT_EXIST);
         }
 
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
+        User loginuserUser = loginUser.getUser();
 
         //获取评论区
         QueryWrapper<ReportComment> queryWrapper = new QueryWrapper<>();
@@ -54,12 +61,19 @@ public class GetReportCommentServiceImpl implements GetReportCommentService {
             ).eq("student_no",reportComment.getStudentNo());
             User user = userMapper.selectOne(queryWrapper2);
 
+            int isMyself = 0;
+
+            if(Objects.equals(user.getStudentNo(), loginuserUser.getStudentNo())){
+                isMyself = 1;
+            }
+
             ReportCommentType groupComment = new ReportCommentType(
                     reportComment.getId(),
                     reportComment.getReportId(),
                     user,
                     reportComment.getRole(),
                     reportComment.getContent(),
+                    isMyself,
                     reportComment.getCreateTime(),
                     reportComment.getUpdateTime()
             );
@@ -104,6 +118,7 @@ public class GetReportCommentServiceImpl implements GetReportCommentService {
         private User userInfo;
         private Integer role;
         private String content;
+        private Integer isMyself;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
         private Date createTime;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.team.backend.config.result.Result;
 import com.team.backend.mapper.ReportCommentMapper;
 import com.team.backend.mapper.WeeklyReportMapper;
+import com.team.backend.pojo.ReportComment;
 import com.team.backend.pojo.User;
 import com.team.backend.pojo.WeeklyReport;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
@@ -37,11 +38,6 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
         queryWrapper.eq("student_no",user.getStudentNo());
 
         Map<String,Object> res = getReportPage(pageNum,pageSize,queryWrapper);
-        List<WeeklyReportType> weeklyReportTypeLists = (List<WeeklyReportType>) res.get("weeklyReports");
-
-        for(WeeklyReportType weeklyReportType:weeklyReportTypeLists){
-
-        }
 
         return Result.success(res);
     }
@@ -59,6 +55,13 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
         List<WeeklyReport> weeklyReportList = rowPages.getRecords();
 
         for (WeeklyReport report:weeklyReportList){
+            QueryWrapper<ReportComment> queryWrapperLeader = new QueryWrapper<>();
+            queryWrapperLeader.eq("report_id",report.getId()).eq("role",2).ne("student_no",report.getStudentNo());
+            List<ReportComment> reportLeaderComment = reportCommentMapper.selectList(queryWrapperLeader);
+
+            QueryWrapper<ReportComment> queryWrapperAdmin = new QueryWrapper<>();
+            queryWrapperAdmin.eq("report_id",report.getId()).eq("role",1).ne("student_no",report.getStudentNo());
+            List<ReportComment> reportAdminComment = reportCommentMapper.selectList(queryWrapperAdmin);
             WeeklyReportType weeklyReportType = new WeeklyReportType(
                     report.getId(),
                     report.getTime(),
@@ -68,6 +71,10 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
                     JsonUtil.JsonToWeekProgress(report.getWeekProgress()),
                     JsonUtil.JsonToWeekPlan(report.getWeekPlan()),
                     JsonUtil.JsonToReport(report.getTeamworkInfos()),
+                    report.getAdminStatus(),
+                    report.getLeaderStatus(),
+                    reportAdminComment.size(),
+                    reportLeaderComment.size(),
                     report.getCreateTime(),
                     report.getUpdateTime()
             );
@@ -80,7 +87,6 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
         res.put("total",rowPages.getTotal());
         res.put("size",rowPages.getSize());
         res.put("current",rowPages.getCurrent());
-
 
         return res;
     }

@@ -1,6 +1,7 @@
 package com.team.backend.service.impl.report.comment;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.mapper.ReportCommentMapper;
@@ -78,6 +79,14 @@ public class AddReportCommentServiceImpl implements AddReportCommentService {
         );
 
         //todo 变更状态 未评论->已评论
+        UpdateWrapper<WeeklyReport> updateWrapper = new UpdateWrapper<>();
+        if(user.getRole()==1){
+            updateWrapper.eq("id",commentAddInfo.getReportId()).set("admin_status",2);
+        }else if(user.getRole()==2){
+            updateWrapper.eq("id",commentAddInfo.getReportId()).set("leader_status",2);
+        }
+
+        weeklyReportMapper.update(null,updateWrapper);
 
         reportCommentMapper.insert(reportComment);
         return Result.success(null);

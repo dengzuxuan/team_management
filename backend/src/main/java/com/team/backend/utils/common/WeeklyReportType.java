@@ -20,6 +20,10 @@ public class WeeklyReportType implements Serializable {
     private WeekProgressType weekProgress;
     private WeekPlanType weekPlan;
     private List<TeamWorks> teamWorks;
+    private Integer adminStatus;
+    private Integer leaderStatus;
+    private Integer adminComment;
+    private Integer leaderComment;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date createTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")

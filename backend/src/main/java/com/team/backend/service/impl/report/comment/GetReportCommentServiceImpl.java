@@ -3,6 +3,7 @@ package com.team.backend.service.impl.report.comment;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
@@ -44,6 +45,16 @@ public class GetReportCommentServiceImpl implements GetReportCommentService {
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
         User loginuserUser = loginUser.getUser();
+
+        UpdateWrapper<WeeklyReport> updateWrapper = new UpdateWrapper<>();
+
+        if(loginuserUser.getRole()==1){
+            updateWrapper.eq("id",weeklyReport.getId()).set("admin_status",1);
+        }else if(loginuserUser.getRole()==2){
+            updateWrapper.eq("id",weeklyReport.getId()).set("leader_status",1);
+        }
+
+        weeklyReportMapper.update(null,updateWrapper);
 
         //获取评论区
         QueryWrapper<ReportComment> queryWrapper = new QueryWrapper<>();

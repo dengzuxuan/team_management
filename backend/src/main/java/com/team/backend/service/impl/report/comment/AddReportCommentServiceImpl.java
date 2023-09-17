@@ -53,7 +53,7 @@ public class AddReportCommentServiceImpl implements AddReportCommentService {
             }
             roleGroup = 1;
         }else if(user.getRole()==2){
-            if(!Objects.equals(reportUser.getLeaderNo(), user.getStudentNo())){
+            if(!Objects.equals(reportUser.getLeaderNo(), user.getStudentNo()) && !Objects.equals(user.getStudentNo(), reportUser.getStudentNo())){
                 return Result.build(null, ResultCodeEnum.REPORT_COMMENT_NOT_LEADER);
             }
             roleGroup = 2;

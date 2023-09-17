@@ -5,10 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.team.backend.config.result.Result;
+import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.mapper.ReportCommentMapper;
 import com.team.backend.mapper.UserMapper;
+import com.team.backend.mapper.WeeklyReportMapper;
 import com.team.backend.pojo.ReportComment;
 import com.team.backend.pojo.User;
+import com.team.backend.pojo.WeeklyReport;
 import com.team.backend.service.report.comment.GetReportCommentService;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +24,19 @@ import java.util.List;
 @Service
 public class GetReportCommentServiceImpl implements GetReportCommentService {
     @Autowired
+    WeeklyReportMapper weeklyReportMapper;
+    @Autowired
     ReportCommentMapper reportCommentMapper;
     @Autowired
     UserMapper userMapper;
     @Override
     public Result getReportComment(int reportId) {
         //todo 变更状态 未读->已读
+        WeeklyReport weeklyReport = weeklyReportMapper.selectById(reportId);
+        if(weeklyReport==null){
+            return Result.build(null, ResultCodeEnum.REPORT_NOT_EXIST);
+        }
+
 
         //获取评论区
         QueryWrapper<ReportComment> queryWrapper = new QueryWrapper<>();

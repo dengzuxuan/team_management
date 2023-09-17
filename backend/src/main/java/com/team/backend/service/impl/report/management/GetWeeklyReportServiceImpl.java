@@ -3,6 +3,7 @@ package com.team.backend.service.impl.report.management;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.team.backend.config.result.Result;
+import com.team.backend.mapper.ReportCommentMapper;
 import com.team.backend.mapper.WeeklyReportMapper;
 import com.team.backend.pojo.User;
 import com.team.backend.pojo.WeeklyReport;
@@ -23,6 +24,9 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
     @Autowired
     WeeklyReportMapper weeklyReportMapper;
 
+    @Autowired
+    ReportCommentMapper reportCommentMapper;
+
     @Override
     public Result getWeeklyReport(int pageNum, int pageSize) {
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -33,6 +37,11 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
         queryWrapper.eq("student_no",user.getStudentNo());
 
         Map<String,Object> res = getReportPage(pageNum,pageSize,queryWrapper);
+        List<WeeklyReportType> weeklyReportTypeLists = (List<WeeklyReportType>) res.get("weeklyReports");
+
+        for(WeeklyReportType weeklyReportType:weeklyReportTypeLists){
+
+        }
 
         return Result.success(res);
     }

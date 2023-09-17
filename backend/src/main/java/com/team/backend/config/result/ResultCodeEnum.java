@@ -55,6 +55,13 @@ public enum ResultCodeEnum {
     EQUIPMENT_ERCORD_NOT_REPEAT(2312,"无法多次申请同一设备，请先撤销原申请"),
     EQUIPMENT_ERCORD_NOT_EXIST(2313,"该记录不存在"),
     EQUIPMENT_ERCORD_CANT_RECOVER(2314,"无法撤销未处于正常使用状态的记录"),
+
+    REPORT_NOT_EXIST(2315,"周报不存在"),
+
+    REPORT_COMMENT_NOT_ADMIN(2316,"管理员无法评论非本组成员周报"),
+    REPORT_COMMENT_NOT_LEADER(2317,"组长无法评论非本组成员周报"),
+    REPORT_COMMENT_NOT_MEMBER(2318,"组员无法评论非自己周报"),
+    REPORT_COMMENT_USER_WRONG(2319,"只可以撤回自己评论"),
     SERVICE_ERROR(2012, "服务异常"),
     DATA_ERROR(204, "数据异常"),
     ILLEGAL_REQUEST(205, "非法请求"),

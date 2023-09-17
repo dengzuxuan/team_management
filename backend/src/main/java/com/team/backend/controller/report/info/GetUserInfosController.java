@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class GetUserInfos {
+public class GetUserInfosController {
     @Autowired
     GetUserInfosServiceImpl getUserInfosService;
 

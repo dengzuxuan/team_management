@@ -35,7 +35,7 @@ public class RegisterServiceImpl implements RegisterService {
 
         String adminNo = "";
         if(username==null){
-            username="";
+            username=studentNo;
         }
         //23125205
         if(studentNo==null){

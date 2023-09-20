@@ -46,15 +46,16 @@ public class GetReportCommentServiceImpl implements GetReportCommentService {
         UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
         User loginuserUser = loginUser.getUser();
 
-        UpdateWrapper<WeeklyReport> updateWrapper = new UpdateWrapper<>();
+        if((loginuserUser.getRole()==1 && weeklyReport.getAdminStatus()==0)|| (loginuserUser.getRole()==2 && weeklyReport.getLeaderStatus()==0)){
+            UpdateWrapper<WeeklyReport> updateWrapper = new UpdateWrapper<>();
 
-        if(loginuserUser.getRole()==1){
-            updateWrapper.eq("id",weeklyReport.getId()).set("admin_status",1);
-        }else if(loginuserUser.getRole()==2){
-            updateWrapper.eq("id",weeklyReport.getId()).set("leader_status",1);
+            if(loginuserUser.getRole()==1){
+                updateWrapper.eq("id",weeklyReport.getId()).set("admin_status",1);
+            }else {
+                updateWrapper.eq("id",weeklyReport.getId()).set("leader_status",1);
+            }
+            weeklyReportMapper.update(null,updateWrapper);
         }
-
-        weeklyReportMapper.update(null,updateWrapper);
 
         //获取评论区
         QueryWrapper<ReportComment> queryWrapper = new QueryWrapper<>();

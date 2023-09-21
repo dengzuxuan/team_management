@@ -80,7 +80,7 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
                     }
 
                     if(username==null){
-                        user.failReason=ResultCodeEnum.INPUT_USERNAME_IS_NULL               .getMessage();
+                        user.failReason=ResultCodeEnum.INPUT_USERNAME_IS_NULL.getMessage();
                         wrongUsers.add(user);
                         continue;
                     }

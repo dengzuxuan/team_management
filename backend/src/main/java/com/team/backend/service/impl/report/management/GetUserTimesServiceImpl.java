@@ -5,8 +5,10 @@ import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.mapper.ReportTeamWorkMapper;
 import com.team.backend.mapper.UserMapper;
+import com.team.backend.mapper.WeeklyReportMapper;
 import com.team.backend.pojo.ReportTeamWork;
 import com.team.backend.pojo.User;
+import com.team.backend.pojo.WeeklyReport;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.report.management.GetUserTimesService;
 import com.team.backend.utils.common.WeeklyGetWorkType;
@@ -22,6 +24,9 @@ import java.util.*;
 public class GetUserTimesServiceImpl implements GetUserTimesService {
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    WeeklyReportMapper weeklyReportMapper;
     @Autowired
     ReportTeamWorkMapper reportTeamWorkMapper;
     @Override
@@ -46,7 +51,7 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
 
         List<UserTimesInfo> userTimesInfos = new ArrayList<>();
         for(User userInfo:userList){
-            QueryWrapper<ReportTeamWork> queryWrapper1 = new QueryWrapper<>();
+            QueryWrapper<WeeklyReport> queryWrapper1 = new QueryWrapper<>();
             int startYear = getReportInfo.getStartTimeInfo().getYear();
             int endYear = getReportInfo.getEndTimeInfo().getYear();
             int startWeek = getReportInfo.getStartTimeInfo().getWeek();
@@ -69,13 +74,14 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
             }
 
 
-            List<ReportTeamWork> reportTeamWorkList = reportTeamWorkMapper.selectList(queryWrapper1);
+            List<WeeklyReport> weeklyReportList = weeklyReportMapper.selectList(queryWrapper1);
+
             UserTimesInfo userTimesInfo = new UserTimesInfo(
                     userInfo.getId(),
                     userInfo.getUsername(),
                     userInfo.getStudentNo(),
                     userInfo.getPhoto(),
-                    reportTeamWorkList.size()
+                    weeklyReportList.size()
             );
             userTimesInfos.add(userTimesInfo);
 

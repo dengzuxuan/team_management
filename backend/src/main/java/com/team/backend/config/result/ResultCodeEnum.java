@@ -38,6 +38,8 @@ public enum ResultCodeEnum {
     FILE_WRONG_EMPTY(2201,"文件无法正常读取或文件为空，请按格式填写"),
     FILE_WRONG_REPEAT(2202,"文件中有学号已经存在平台中"),
     FILE_WRONG_EMPTY_SINGLE(2203,"文件中有部分数据不全"),
+    INPUT_STUDENTNO_IS_NULL(2204,"输入用户学号为空"),
+    INPUT_USERNAME_IS_NULL(2205,"输入用户名称为空"),
 
 
     EQUIPMENT_ALREAY_EXIST(2301,"该设备已经存在"),

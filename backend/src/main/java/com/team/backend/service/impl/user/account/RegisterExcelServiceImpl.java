@@ -68,12 +68,25 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
                     String studentNo = demoData.getStudentNo();
                     String username = demoData.getUsername();
 
-                    Matcher studentNoMatcher = studentNoPatten.matcher(studentNo);
-                    Matcher usernameMatcher = usernamePatten.matcher(username);
 
                     RegisterUser user = new RegisterUser();
                     user.setUsername(username);
                     user.setStudentNo(studentNo);
+
+                    if(studentNo==null){
+                        user.failReason=ResultCodeEnum.INPUT_STUDENTNO_IS_NULL.getMessage();
+                        wrongUsers.add(user);
+                        continue;
+                    }
+
+                    if(username==null){
+                        user.failReason=ResultCodeEnum.INPUT_USERNAME_IS_NULL               .getMessage();
+                        wrongUsers.add(user);
+                        continue;
+                    }
+
+                    Matcher studentNoMatcher = studentNoPatten.matcher(studentNo);
+                    Matcher usernameMatcher = usernamePatten.matcher(username);
 
                     if(username.length()==0 || studentNo.length()<6){
                         user.failReason=ResultCodeEnum.FILE_WRONG_EMPTY_SINGLE.getMessage();

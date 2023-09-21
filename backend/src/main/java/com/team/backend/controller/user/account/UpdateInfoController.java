@@ -28,14 +28,13 @@ public class UpdateInfoController {
         private String photo;
         private String email;
         private String phone;
-
-
+        private String username;
     }
     @Autowired
     UpdateInfoService updateInfoService;
 
     @PostMapping(value = "/v1/user/account/updateinfo/",consumes="application/json")
     public Result updateInfo(@RequestBody UpdateUser user){
-        return updateInfoService.updateInfo(user.email,user.photo,user.phone);
+        return updateInfoService.updateInfo(user.email,user.photo,user.phone,user.username);
     }
 }

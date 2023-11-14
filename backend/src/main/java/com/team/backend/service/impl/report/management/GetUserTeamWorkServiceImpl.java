@@ -5,11 +5,9 @@ import com.team.backend.config.result.Result;
 import com.team.backend.mapper.WeeklyReportMapper;
 import com.team.backend.pojo.WeeklyReport;
 import com.team.backend.service.report.management.GetUserTeamWorkService;
-import com.team.backend.service.report.management.GetUserTimeReportService;
 import com.team.backend.utils.JsonUtil;
-import com.team.backend.utils.common.TeamWorks;
-import com.team.backend.utils.common.WeeklyGetReportType;
-import com.team.backend.utils.common.WeeklyReportType;
+import com.team.backend.dto.req.TeamWorks;
+import com.team.backend.dto.req.WeeklyGetReportType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

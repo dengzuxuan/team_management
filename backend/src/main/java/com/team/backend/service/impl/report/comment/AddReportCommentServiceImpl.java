@@ -12,7 +12,7 @@ import com.team.backend.pojo.User;
 import com.team.backend.pojo.WeeklyReport;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.report.comment.AddReportCommentService;
-import com.team.backend.utils.common.WeeklyReportCommentAddType;
+import com.team.backend.dto.req.WeeklyReportCommentAddType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

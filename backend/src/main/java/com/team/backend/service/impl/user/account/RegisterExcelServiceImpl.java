@@ -9,7 +9,7 @@ import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.User;
 import com.team.backend.service.user.account.RegisterExcelService;
-import com.team.backend.utils.common.UserType;
+import com.team.backend.utils.common.excelType.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -125,6 +125,7 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
         }finally {
             IOUtils.closeQuietly(inputStream);
         }
+
         Map<String,Object> res = new HashMap<>();
         res.put("totalCnt",totalCnt);
         res.put("corrcetCnt",correctUsers.size());

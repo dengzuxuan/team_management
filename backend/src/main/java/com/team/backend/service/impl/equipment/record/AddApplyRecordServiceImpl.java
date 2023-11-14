@@ -11,7 +11,7 @@ import com.team.backend.pojo.User;
 import com.team.backend.service.equipment.record.AddApplyRecordService;
 import com.team.backend.service.equipment.record.CheckApplyService;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
-import com.team.backend.utils.common.RecordType;
+import com.team.backend.dto.req.RecordType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

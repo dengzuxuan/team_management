@@ -13,7 +13,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="backend" target="1.8" />
       <module name="common" target="1.8" />
       <module name="common-util" target="1.8" />
       <module name="service-util" target="1.8" />

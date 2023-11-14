@@ -30,6 +30,10 @@ public enum ResultCodeEnum {
     USER_ROLE_WRONG(2014,"输入用户角色有误"),
     TEAM_NOT_EXIST(2015,"该小组不存在"),
     PARAMS_WRONG(2016,"请输入正确参数"),
+    TEAM_NAME_NOT_EMPTY(2017,"小组名称不能为空"),
+    TEAM_NAME_WRONG(2018,"小组名称参数有误"),
+    TEAM_NAME_ALRADY_EXIST(2019,"小组名称已存在"),
+    TEAM_NAME_ALRADY_EXIST_BEFORE(2020,"当前excel中已存在该小组名称"),
     INPUT_PARAM_WRONG(2101,"输入参数有误"),
     INPUT_EMAIL_PARAM_WRONG(2102,"输入email格式有误"),
     INPUT_PHONE_PARAM_WRONG(2101,"输入电话格式有误"),
@@ -40,6 +44,7 @@ public enum ResultCodeEnum {
     FILE_WRONG_EMPTY_SINGLE(2203,"文件中有部分数据不全"),
     INPUT_STUDENTNO_IS_NULL(2204,"输入用户学号为空"),
     INPUT_USERNAME_IS_NULL(2205,"输入用户名称为空"),
+    USER_CANT_UPDATE_REPORT(2206,"无法修改他人周报"),
 
 
     EQUIPMENT_ALREAY_EXIST(2301,"该设备已经存在"),

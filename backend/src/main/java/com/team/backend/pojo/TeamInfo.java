@@ -19,9 +19,6 @@ public class TeamInfo {
     private String adminNo;
     private String leaderNo;
     private String teamname;
-    private String description;
-    private String performance;
-    private String task;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date createTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")

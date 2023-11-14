@@ -9,14 +9,13 @@ import com.team.backend.pojo.User;
 import com.team.backend.service.equipment.management.GetEquipmentInfoService;
 import com.team.backend.service.equipment.record.GetApplyRecordService;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
-import com.team.backend.utils.common.RecordShowType;
+import com.team.backend.dto.resp.RecordShowType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

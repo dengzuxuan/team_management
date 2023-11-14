@@ -12,7 +12,7 @@ import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.report.management.GetWeeklyReportService;
 import com.team.backend.utils.JsonUtil;
 import com.team.backend.utils.ReportSortUtil;
-import com.team.backend.utils.common.WeeklyReportType;
+import com.team.backend.dto.req.WeeklyReportType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

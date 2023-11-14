@@ -7,9 +7,8 @@ import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.EquipmentRecord;
 import com.team.backend.pojo.User;
 import com.team.backend.service.equipment.management.GetEquipmentInfoService;
-import com.team.backend.service.equipment.record.GetApplyRecordService;
 import com.team.backend.service.equipment.record.GetEquipmentRecordService;
-import com.team.backend.utils.common.RecordShowType;
+import com.team.backend.dto.resp.RecordShowType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

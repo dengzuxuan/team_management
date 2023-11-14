@@ -3,15 +3,11 @@ package com.team.backend.service.impl.equipment.management;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.listener.PageReadListener;
 import com.aliyuncs.utils.IOUtils;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
-import com.team.backend.pojo.User;
 import com.team.backend.service.equipment.management.AddEquipmentExcelService;
 import com.team.backend.service.equipment.management.AddEquipmentService;
-import com.team.backend.service.impl.user.account.RegisterExcelServiceImpl;
-import com.team.backend.utils.common.UserType;
-import com.team.backend.utils.common.equipmentType;
+import com.team.backend.dto.req.equipmentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 
 @Service
 public class AddEquipmentExcelServiceImpl implements AddEquipmentExcelService {

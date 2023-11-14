@@ -11,7 +11,7 @@ import com.team.backend.pojo.Equipment;
 import com.team.backend.pojo.EquipmentRecord;
 import com.team.backend.pojo.User;
 import com.team.backend.service.equipment.management.GetEquipmentInfoService;
-import com.team.backend.utils.common.equipmentPageType;
+import com.team.backend.dto.resp.equipmentPageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -81,11 +81,11 @@ public class GetListServiceImpl implements GetListService {
             User adminInfo = userMapper.selectOne(queryWrapper1);
 
             QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper1.eq("student_no",userInfo.getLeaderNo()).select(
+            queryWrapper2.eq("student_no",userInfo.getLeaderNo()).select(
                     User.class,info->!info.getColumn().equals("password_real")
                             && !info.getColumn().equals("password")
             );
-            User leaderInfo = userMapper.selectOne(queryWrapper1);
+            User leaderInfo = userMapper.selectOne(queryWrapper2);
 
 
             ExtendUser extendUser = new ExtendUser(

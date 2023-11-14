@@ -2,8 +2,7 @@ package com.team.backend.controller.report.management;
 
 import com.team.backend.config.result.Result;
 import com.team.backend.service.report.management.AddWeeklyReportService;
-import com.team.backend.utils.common.RecordType;
-import com.team.backend.utils.common.WeeklyReportType;
+import com.team.backend.dto.req.WeeklyReportType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

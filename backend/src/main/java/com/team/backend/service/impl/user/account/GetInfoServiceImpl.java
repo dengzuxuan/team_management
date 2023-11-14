@@ -5,6 +5,7 @@ import com.team.backend.mapper.RoleMapper;
 import com.team.backend.pojo.User;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.user.account.GetInfoService;
+import com.team.backend.utils.MySQLDatabaseBackupUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ public class GetInfoServiceImpl implements GetInfoService {
     private RoleMapper roleMapper;
     @Override
     public Result getInfo() {
+
         User user = null;
         //获取上下文
         UsernamePasswordAuthenticationToken authentication =

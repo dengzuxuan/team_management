@@ -3,7 +3,7 @@ package com.team.backend.controller.report.management;
 
 import com.team.backend.config.result.Result;
 import com.team.backend.service.impl.report.management.GetUserTimesServiceImpl;
-import com.team.backend.utils.common.WeeklyGetWorkType;
+import com.team.backend.dto.req.WeeklyGetWorkType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

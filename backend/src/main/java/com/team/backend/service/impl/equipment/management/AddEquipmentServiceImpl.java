@@ -9,15 +9,13 @@ import com.team.backend.pojo.Equipment;
 import com.team.backend.pojo.User;
 import com.team.backend.service.equipment.management.AddEquipmentService;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
-import com.team.backend.utils.common.equipmentType;
+import com.team.backend.dto.req.equipmentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class AddEquipmentServiceImpl implements AddEquipmentService {

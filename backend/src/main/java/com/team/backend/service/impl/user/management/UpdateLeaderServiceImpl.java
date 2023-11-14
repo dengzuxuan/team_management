@@ -7,7 +7,7 @@ import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.User;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
-import com.team.backend.service.team.info.UpdateTeamInfoService;
+import com.team.backend.service.team.management.UpdateTeamInfoService;
 import com.team.backend.service.user.management.UpdateLeaderService;
 import com.team.backend.service.user.management.UpdateRoleService;
 import org.springframework.beans.factory.annotation.Autowired;

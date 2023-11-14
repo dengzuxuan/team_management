@@ -23,4 +23,9 @@ public class GetTeamInfoController {
         String StudentNo = map.get("studentNo");
         return getTeamInfoService.getTeamInfo(StudentNo);
     }
+
+    @GetMapping(value = "/v1/team/info/getinfodetails/")
+    public Result getTeamDetailInfo(){
+        return getTeamInfoService.getTeamDetail();
+    }
 }

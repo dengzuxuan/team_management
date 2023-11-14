@@ -2,8 +2,7 @@ package com.team.backend.controller.user.management;
 
 
 import com.team.backend.config.result.Result;
-import com.team.backend.service.team.info.AddTeamService;
-import com.team.backend.service.team.info.GetTeamInfoService;
+import com.team.backend.service.team.management.AddTeamService;
 import com.team.backend.service.user.management.UpdateRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

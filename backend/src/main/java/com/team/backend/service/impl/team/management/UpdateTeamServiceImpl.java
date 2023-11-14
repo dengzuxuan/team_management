@@ -1,6 +1,5 @@
 package com.team.backend.service.impl.team.management;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
@@ -8,11 +7,10 @@ import com.team.backend.mapper.TeamInfoMapper;
 import com.team.backend.pojo.TeamInfo;
 import com.team.backend.pojo.User;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
-import com.team.backend.service.team.info.UpdateTeamInfoService;
+import com.team.backend.service.team.management.UpdateTeamInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 @Service

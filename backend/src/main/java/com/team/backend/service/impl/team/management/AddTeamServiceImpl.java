@@ -6,14 +6,13 @@ import com.aliyuncs.utils.IOUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
+import com.team.backend.dto.req.TeamInfoType;
 import com.team.backend.mapper.TeamInfoMapper;
 import com.team.backend.pojo.TeamInfo;
 import com.team.backend.pojo.User;
-import com.team.backend.service.impl.user.account.RegisterExcelServiceImpl;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
-import com.team.backend.service.team.info.AddTeamService;
+import com.team.backend.service.team.management.AddTeamService;
 import com.team.backend.utils.common.excelType.TeamType;
-import com.team.backend.utils.common.excelType.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
-import java.util.regex.Matcher;
 
 @Service
 public class AddTeamServiceImpl implements AddTeamService {
@@ -48,6 +46,26 @@ public class AddTeamServiceImpl implements AddTeamService {
         Date now = new Date();
         TeamInfo teamInfo = new TeamInfo(null, adminUser.getStudentNo(), leaderNo,"", now, now);
         teamInfoMapper.insert(teamInfo);
+        return Result.success(null);
+    }
+
+    @Override
+    public Result addTeamMoreService(TeamInfoType[] teamInfos) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
+        User adminUser = loginUser.getUser();
+
+        if(adminUser.getRole()!=1){
+            return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
+        }
+
+        Date now = new Date();
+        for (TeamInfoType info:teamInfos ) {
+            TeamInfo teamInfo = new TeamInfo(null, adminUser.getStudentNo(), null, info.getTeamName(), now, now);
+            teamInfoMapper.insert(teamInfo);
+        }
+
         return Result.success(null);
     }
 

@@ -1,4 +1,4 @@
-package com.team.backend.service.team.info;
+package com.team.backend.service.team.management;
 
 import com.team.backend.config.result.Result;
 

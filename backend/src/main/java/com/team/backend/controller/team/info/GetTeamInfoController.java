@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+import static com.fasterxml.jackson.core.io.NumberInput.parseInt;
+
 @RestController
 public class GetTeamInfoController {
 
@@ -27,5 +29,12 @@ public class GetTeamInfoController {
     @GetMapping(value = "/v1/team/info/getinfodetails/")
     public Result getTeamDetailInfo(){
         return getTeamInfoService.getTeamDetail();
+    }
+
+    @GetMapping(value = "/v1/team/info/getallinfos/")
+    public Result getAllTeamInfo(@RequestParam Map<String,String> map){
+        int pageNum = parseInt(map.get("pageNum")) ;
+        int pageSize = parseInt(map.get("pageSize"));
+        return getTeamInfoService.getAllTeamInfos(pageNum,pageSize);
     }
 }

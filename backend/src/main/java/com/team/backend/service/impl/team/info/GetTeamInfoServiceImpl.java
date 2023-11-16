@@ -1,6 +1,7 @@
 package com.team.backend.service.impl.team.info;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.mapper.TeamInfoMapper;
@@ -97,5 +98,30 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
             teamDeatilInfo.put(teamInfo.getTeamname(),teamMembers);
         }
         return Result.success(teamDeatilInfo);
+    }
+
+    @Override
+    public Result getAllTeamInfos(int pageNum, int pageSize) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
+        User user = loginUser.getUser();
+
+        if(user.getRole()!=1){
+            return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
+        }
+
+        Page<TeamInfo> page = new Page<>(pageNum,pageSize);
+        QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
+        Page<TeamInfo> rowPages = new Page<>();
+
+        queryWrapper.eq("admin_no",user.getStudentNo());
+        rowPages = teamInfoMapper.selectPage(page,queryWrapper);
+        List<TeamInfo> teamInfos = rowPages.getRecords();
+
+        for(TeamInfo teamInfo:teamInfos){
+
+        }
+        return null;
     }
 }

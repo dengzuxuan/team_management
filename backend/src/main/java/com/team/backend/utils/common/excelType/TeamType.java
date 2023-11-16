@@ -17,7 +17,7 @@ import lombok.*;
 @NoArgsConstructor
 public class TeamType {
     @ExcelProperty(index = 0)
-    private int no;
+    private String no;
 
     @ExcelProperty(index = 1)
     private String typename;

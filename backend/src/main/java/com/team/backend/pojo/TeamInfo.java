@@ -16,6 +16,7 @@ import java.util.Date;
 public class TeamInfo {
     @TableId(type = IdType.AUTO)
     private Integer id;
+    private String no;
     private String adminNo;
     private String leaderNo;
     private String teamname;

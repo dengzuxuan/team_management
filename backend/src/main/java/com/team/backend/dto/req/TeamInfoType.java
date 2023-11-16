@@ -15,6 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TeamInfoType {
-    private String id;
+    private String no;
     private String teamName;
 }
+

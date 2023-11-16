@@ -18,6 +18,7 @@ import java.util.Date;
 public class User implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
+    private String teamNo;
     private String leaderNo;
     private String adminNo;
     private String username;

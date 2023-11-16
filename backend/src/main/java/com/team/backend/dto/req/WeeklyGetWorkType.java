@@ -10,7 +10,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WeeklyGetWorkType implements Serializable {
-    String studentNo;
+    String studentNo; //单独成员->学号 某小组下所有成员->小组编号
     timeInfo startTimeInfo;
     timeInfo endTimeInfo;
     @Getter

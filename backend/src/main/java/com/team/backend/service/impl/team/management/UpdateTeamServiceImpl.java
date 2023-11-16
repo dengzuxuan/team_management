@@ -1,8 +1,10 @@
 package com.team.backend.service.impl.team.management;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
+import com.team.backend.dto.req.TeamInfoType;
 import com.team.backend.mapper.TeamInfoMapper;
 import com.team.backend.pojo.TeamInfo;
 import com.team.backend.pojo.User;
@@ -26,8 +28,9 @@ public class UpdateTeamServiceImpl implements UpdateTeamInfoService {
         return Result.success(null);
     }
 
+
     @Override
-    public Result updateTeamInfo(String id,String teamName) {
+    public Result updateTeamInfo(TeamInfoType teamInfo) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
@@ -37,15 +40,16 @@ public class UpdateTeamServiceImpl implements UpdateTeamInfoService {
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
-        int idInt = Integer.parseInt(id);
-        TeamInfo teamInfoFind  = teamInfoMapper.selectById(idInt);
+        QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("no",teamInfo.getNo());
+        TeamInfo teamInfoFind  = teamInfoMapper.selectOne(queryWrapper);
 
         if(teamInfoFind==null) {
             return Result.build(null,ResultCodeEnum.TEAM_NOT_EXIST);
         }
 
-        teamInfoFind.setTeamname(teamName);
-
+        teamInfoFind.setTeamname(teamInfo.getTeamName());
+        teamInfoFind.setNo(teamInfo.getNo());
         teamInfoMapper.updateById(teamInfoFind);
         return Result.success(null);
     }

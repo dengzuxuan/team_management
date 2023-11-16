@@ -63,7 +63,7 @@ public class RegisterServiceImpl implements RegisterService {
         String encodedPassword = passwordEncoder.encode(password);
         String defaultPhoto = "http://team-manager.oss-cn-beijing.aliyuncs.com/avatar/default.png";
         Date now = new Date();
-        User user = new User(null,"",adminNo,username,encodedPassword,null,null,role,defaultPhoto,studentNo,password,now,now);
+        User user = new User(null,null,adminNo,username,encodedPassword,null,null,null,role,defaultPhoto,studentNo,password,now,now);
         userMapper.insert(user);
         return Result.success(null);
     }

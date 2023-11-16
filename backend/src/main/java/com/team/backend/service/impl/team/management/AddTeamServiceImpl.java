@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class AddTeamServiceImpl implements AddTeamService {
@@ -33,7 +35,7 @@ public class AddTeamServiceImpl implements AddTeamService {
     TeamInfoMapper teamInfoMapper;
 
     @Override
-    public Result addTeamService(String leaderNo) {
+    public Result addTeamService(TeamInfoType teamInfo) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
@@ -43,9 +45,13 @@ public class AddTeamServiceImpl implements AddTeamService {
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
+        ResultCodeEnum codeEnum = checkTeamInfo(teamInfo.getNo(), teamInfo.getTeamName());
+        if( codeEnum!= ResultCodeEnum.SUCCESS){
+            return Result.build(null,codeEnum);
+        }
         Date now = new Date();
-        TeamInfo teamInfo = new TeamInfo(null, adminUser.getStudentNo(), leaderNo,"", now, now);
-        teamInfoMapper.insert(teamInfo);
+        TeamInfo newTeam = new TeamInfo(null, teamInfo.getNo(),adminUser.getStudentNo(),null ,teamInfo.getTeamName(), now, now);
+        teamInfoMapper.insert(newTeam);
         return Result.success(null);
     }
 
@@ -62,7 +68,7 @@ public class AddTeamServiceImpl implements AddTeamService {
 
         Date now = new Date();
         for (TeamInfoType info:teamInfos ) {
-            TeamInfo teamInfo = new TeamInfo(null, adminUser.getStudentNo(), null, info.getTeamName(), now, now);
+            TeamInfo teamInfo = new TeamInfo(null,info.getNo() ,adminUser.getStudentNo(), null, info.getTeamName(), now, now);
             teamInfoMapper.insert(teamInfo);
         }
 
@@ -74,7 +80,7 @@ public class AddTeamServiceImpl implements AddTeamService {
     @AllArgsConstructor
     @Data
     private static class TeamExcelInfo implements Serializable {
-        private String id;
+        private String no;
         private String teamName;
         private String failReason;
     }
@@ -103,47 +109,37 @@ public class AddTeamServiceImpl implements AddTeamService {
 
                 //总长度
                 totalCnt = dataList.size();
-                List<TeamInfo> teamInfos = teamInfoMapper.selectList(null);
-                int idInt = teamInfos.get(teamInfos.size()-1).getId() + 1;
                 //重复名称
                 Set<String> teamNameSet = new HashSet<>();
+                //重复编号
+                Set<String> teamNoSet = new HashSet<>();
 
-                for (TeamType demoData : dataList) {
-                    String teamname = demoData.getTypename();
-
+                for (TeamType data : dataList) {
                     TeamExcelInfo teamExcelInfo = new TeamExcelInfo();
-                    teamExcelInfo.setTeamName(demoData.getTypename());
+                    teamExcelInfo.setTeamName(data.getTypename());
+                    teamExcelInfo.setNo(data.getNo());
 
-                    if(teamname==null){
-                        teamExcelInfo.failReason=ResultCodeEnum.TEAM_NAME_NOT_EMPTY.getMessage();
-                        wrongTeams.add(teamExcelInfo);
-                        continue;
-                    }
-                    if(teamname.length()>20){
-                        teamExcelInfo.failReason=ResultCodeEnum.TEAM_NAME_WRONG.getMessage();
-                        wrongTeams.add(teamExcelInfo);
-                        continue;
-                    }
-
-                    QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
-                    queryWrapper.eq("teamname",teamname);
-                    if(teamNameSet.contains(teamname)){
+                    if(teamNameSet.contains(data.getTypename())){
                         teamExcelInfo.failReason=ResultCodeEnum.TEAM_NAME_ALRADY_EXIST_BEFORE.getMessage();
                         wrongTeams.add(teamExcelInfo);
                         continue;
                     }
-                    teamNameSet.add(teamname);
-                    TeamInfo teamInfoFind = teamInfoMapper.selectOne(queryWrapper);
-                    if(teamInfoFind!=null){
-                        teamExcelInfo.failReason=ResultCodeEnum.TEAM_NAME_ALRADY_EXIST.getMessage();
+
+                    if(teamNoSet.contains(data.getNo())){
+                        teamExcelInfo.failReason=ResultCodeEnum.TEAM_NO_ALRADY_EXIST_BEFORE.getMessage();
                         wrongTeams.add(teamExcelInfo);
                         continue;
                     }
-                    teamExcelInfo.setId(getFillId(idInt));
 
-                    idInt = idInt+1;
-
-                    correctTeams.add(teamExcelInfo);
+                    ResultCodeEnum codeEnum = checkTeamInfo(data.getNo(),data.getTypename());
+                    if(codeEnum == ResultCodeEnum.SUCCESS){
+                        correctTeams.add(teamExcelInfo);
+                        teamNoSet.add(data.getNo());
+                        teamNameSet.add(data.getTypename());
+                    }else{
+                        teamExcelInfo.failReason=codeEnum.getMessage();
+                        wrongTeams.add(teamExcelInfo);
+                    }
                 }
             })).sheet().doRead();
         } catch (IOException e) {
@@ -162,12 +158,38 @@ public class AddTeamServiceImpl implements AddTeamService {
         return Result.success(res);
     }
 
-    private String getFillId(int id){
-        StringBuilder idStr = new StringBuilder(String.valueOf(id));
-
-        for(int i = idStr.length();i<6;i++){
-            idStr.insert(0, "0");
+    private ResultCodeEnum checkTeamInfo(String no,String typename){
+        if(no == null){
+            return ResultCodeEnum.TEAM_NO_NOT_EMPTY;
         }
-        return String.valueOf(idStr);
+        if(typename == null){
+            return ResultCodeEnum.TEAM_NAME_NOT_EMPTY;
+        }
+        String noRegex = "^[a-zA-Z0-9]{6}$";
+        Pattern noPatten = Pattern.compile(noRegex);
+        Matcher noMatcher = noPatten.matcher(no);
+        if(!noMatcher.matches()){
+            return ResultCodeEnum.TEAM_NO_WRONG;
+        }
+
+        if(typename.length() > 10){
+            return ResultCodeEnum.TEAM_NAME_WRONG;
+        }
+
+        QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("no",no);
+        TeamInfo teamInfoNoFind = teamInfoMapper.selectOne(queryWrapper);
+        if(teamInfoNoFind!=null){
+            return ResultCodeEnum.TEAM_NO_ALRADY_EXIST;
+        }
+
+        QueryWrapper<TeamInfo> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("teamname",typename);
+        TeamInfo teamInfoNameFind = teamInfoMapper.selectOne(queryWrapper2);
+        if(teamInfoNameFind!=null){
+            return ResultCodeEnum.TEAM_NAME_ALRADY_EXIST;
+        }
+
+        return ResultCodeEnum.SUCCESS;
     }
 }

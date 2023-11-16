@@ -3,11 +3,15 @@ package com.team.backend.service.impl.report.management;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
+import com.team.backend.dto.resp.UserTimesInfo;
 import com.team.backend.mapper.ReportTeamWorkMapper;
+import com.team.backend.mapper.TeamInfoMapper;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.mapper.WeeklyReportMapper;
+import com.team.backend.pojo.TeamInfo;
 import com.team.backend.pojo.User;
 import com.team.backend.pojo.WeeklyReport;
+import com.team.backend.service.impl.report.utils.getTimesInfo;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.report.management.GetUserTimesService;
 import com.team.backend.dto.req.WeeklyGetWorkType;
@@ -23,11 +27,14 @@ import java.util.*;
 public class GetUserTimesServiceImpl implements GetUserTimesService {
     @Autowired
     UserMapper userMapper;
-
     @Autowired
     WeeklyReportMapper weeklyReportMapper;
     @Autowired
     ReportTeamWorkMapper reportTeamWorkMapper;
+    @Autowired
+    TeamInfoMapper teamInfoMapper;
+    @Autowired
+    getTimesInfo getTimesInfo;
     @Override
     public Result getUserTimes(WeeklyGetWorkType getReportInfo, int pageNum, int pageSize) {
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
@@ -37,16 +44,7 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
-        List<User> userList = new ArrayList<>();
-        if(user.getRole()==1){
-            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("admin_no",user.getStudentNo());
-            userList = userMapper.selectList(queryWrapper);
-        }else{
-            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("leader_no",user.getStudentNo());
-            userList = userMapper.selectList(queryWrapper);
-        }
+        List<User> userList = getTimesInfo.getUserList(user, getReportInfo.getStudentNo());
 
         List<UserTimesInfo> userTimesInfos = new ArrayList<>();
         for(User userInfo:userList){
@@ -60,7 +58,7 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
                 queryWrapper1.eq("student_no",userInfo.getStudentNo()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
             }else if(startYear<endYear){
                 //跨年
-                //2022 23 - 2023 10
+                //eg:2022 23 - 2023 10
                 for (int i = startYear; i <= endYear ; i++) {
                     if(i==startYear){
                         queryWrapper1.eq("student_no",userInfo.getStudentNo()).eq("year",i).ge("week",startWeek);
@@ -74,68 +72,39 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
 
 
             List<WeeklyReport> weeklyReportList = weeklyReportMapper.selectList(queryWrapper1);
+            
+            String teamName = null;
+            QueryWrapper<TeamInfo> queryWrapper2 = new QueryWrapper<>();
+            queryWrapper2.eq("no",userInfo.getTeamNo());
+            TeamInfo teamInfoFind = teamInfoMapper.selectOne(queryWrapper2);
+            if(teamInfoFind!=null){
+                teamName = teamInfoFind.getTeamname();
+            }
 
             UserTimesInfo userTimesInfo = new UserTimesInfo(
                     userInfo.getId(),
-                    userInfo.getUsername(),
                     userInfo.getStudentNo(),
+                    userInfo.getRole(),
+                    userInfo.getUsername(),
                     userInfo.getPhoto(),
+                    userInfo.getTeamNo(),
+                    teamName,
                     weeklyReportList.size()
             );
+
             userTimesInfos.add(userTimesInfo);
-
         }
 
-        userTimesInfos.sort(new Comparator<UserTimesInfo>() {//使用List接口的方法排序
-            @Override
-            public int compare(UserTimesInfo o1, UserTimesInfo o2) {
-                return o1.getTimes()-o2.getTimes();
-            }
-        });
+        //使用List接口的方法排序
+        userTimesInfos.sort((o1, o2) -> o1.getTimes()-o2.getTimes());
 
-        int totalCount = userTimesInfos.size(); //总数量
-        int pageCount = 0; //总页数
-        List<UserTimesInfo> subyList = null;
-        int m = totalCount % pageSize;
-        if (m > 0) {
-            pageCount = totalCount / pageSize + 1;
-        } else {
-            pageCount = totalCount / pageSize;
-        }
-
-        if (m == 0) {
-            subyList = userTimesInfos.subList((pageNum - 1) * pageSize, pageSize * (pageNum));
-        } else {
-            if (pageNum == pageCount) {
-                subyList = userTimesInfos.subList((pageNum - 1) * pageSize, totalCount);
-            }
-            if (pageNum< pageCount){
-                subyList = userTimesInfos.subList((pageNum - 1) * pageSize, pageSize * (pageNum));
-            }
-        }
-        if (pageNum > pageCount){
-            subyList  = null;
-        }
+        List pageList = getTimesInfo.getPageList(userTimesInfos, pageSize, pageNum);
 
         Map<String,Object> res = new HashMap<>();
-        res.put("userTimesInfo",subyList);
+        res.put("userTimesInfo",pageList);
         res.put("total",userTimesInfos.size());
         res.put("size",pageSize);
         res.put("current",pageNum);
         return Result.success(res);
-
     }
-    @Getter
-    @Setter
-    @EqualsAndHashCode
-    @AllArgsConstructor
-    @NoArgsConstructor
-    private class UserTimesInfo{
-        private int id;
-        private String name;
-        private String studentNo;
-        private String photo;
-        private int times;
-    }
-
 }

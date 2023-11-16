@@ -25,9 +25,9 @@ public class AddLeaderController {
         Result res =  updateRoleService.updateRole(studentNo,"2");
 
         //小组表变更
-        if (res.getCode()==200){
-            res = addTeamService.addTeamService(studentNo);
-        }
+//        if (res.getCode()==200){
+//            res = addTeamService.addTeamService(studentNo);
+//        }
 
         return res;
     }

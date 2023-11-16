@@ -8,6 +8,8 @@ class BackendApplicationTests {
 
 	@Test
 	void contextLoads() {
+		String test = "测试abc";
+		System.out.println("test.length() = " + test.length());
 	}
 
 }

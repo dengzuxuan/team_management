@@ -7,6 +7,7 @@ import com.team.backend.mapper.ReportTeamWorkMapper;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.ReportTeamWork;
 import com.team.backend.pojo.User;
+import com.team.backend.service.impl.report.utils.getTimesInfo;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.report.teamwork.GetUserTimeTeamWorkService;
 import com.team.backend.dto.req.WeeklyGetWorkType;
@@ -24,7 +25,8 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
     UserMapper userMapper;
     @Autowired
     ReportTeamWorkMapper reportTeamWorkMapper;
-
+    @Autowired
+    getTimesInfo getTimesInfo;
     @Override
     public Result getUserTimeTeamWork(WeeklyGetWorkType getReportInfo, int pageNum, int pageSize) {
 
@@ -37,16 +39,7 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
 
         List<UserTeamWorkInfo> userTeamWorkInfos = new ArrayList<>();
 
-        List<User> userList = new ArrayList<>();
-        if(user.getRole()==1){
-            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("admin_no",user.getStudentNo());
-            userList = userMapper.selectList(queryWrapper);
-        }else{
-            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("leader_no",user.getStudentNo());
-            userList = userMapper.selectList(queryWrapper);
-        }
+        List<User> userList = getTimesInfo.getUserList(user,getReportInfo.getStudentNo());
 
         for(User userInfo:userList){
             QueryWrapper<ReportTeamWork> queryWrapper1 = new QueryWrapper<>();
@@ -107,32 +100,11 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
             }
         });
 
-        int totalCount = userTeamWorkInfos.size(); //总数量
-        int pageCount = 0; //总页数
-        List<UserTeamWorkInfo> subyList = null;
-        int m = totalCount % pageSize;
-        if (m > 0) {
-            pageCount = totalCount / pageSize + 1;
-        } else {
-            pageCount = totalCount / pageSize;
-        }
+        List pageList = getTimesInfo.getPageList(userTeamWorkInfos, pageSize, pageNum);
 
-        if (m == 0) {
-            subyList = userTeamWorkInfos.subList((pageNum - 1) * pageSize, pageSize * (pageNum));
-        } else {
-            if (pageNum == pageCount) {
-                subyList = userTeamWorkInfos.subList((pageNum - 1) * pageSize, totalCount);
-            }
-            if (pageNum< pageCount){
-                subyList = userTeamWorkInfos.subList((pageNum - 1) * pageSize, pageSize * (pageNum));
-            }
-        }
-        if (pageNum > pageCount){
-            subyList  = null;
-        }
 
         Map<String,Object> res = new HashMap<>();
-        res.put("userTimesTeamWorkInfo",subyList);
+        res.put("userTimesTeamWorkInfo",pageList);
         res.put("total",userTeamWorkInfos.size());
         res.put("size",pageSize);
         res.put("current",pageNum);

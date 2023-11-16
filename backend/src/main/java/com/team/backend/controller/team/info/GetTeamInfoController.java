@@ -31,6 +31,12 @@ public class GetTeamInfoController {
         return getTeamInfoService.getTeamDetail();
     }
 
+    @GetMapping(value = "/v1/team/info/getteamuserinfo/")
+    public Result getTeamUserInfo(@RequestParam Map<String,String> map){
+        String teamNo = map.get("no");
+        return getTeamInfoService.getTeamUserInfo(teamNo);
+    }
+
     @GetMapping(value = "/v1/team/info/getallinfos/")
     public Result getAllTeamInfo(@RequestParam Map<String,String> map){
         int pageNum = parseInt(map.get("pageNum")) ;

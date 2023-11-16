@@ -23,4 +23,9 @@ public class AddTeamInfoController {
     public Result addTeamInfoMore(@RequestBody TeamInfoType[] teamInfoTypes){
         return addTeamService.addTeamMoreService(teamInfoTypes);
     }
+
+    @PostMapping(value="/v1/team/management/teamadd/",consumes="application/json")
+    public Result addTeamInfo(@RequestBody TeamInfoType teamInfoTypes){
+        return addTeamService.addTeamService(teamInfoTypes);
+    }
 }

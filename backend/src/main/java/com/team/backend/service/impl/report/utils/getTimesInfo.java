@@ -1,17 +1,10 @@
 package com.team.backend.service.impl.report.utils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.team.backend.config.result.Result;
-import com.team.backend.config.result.ResultCodeEnum;
-import com.team.backend.dto.resp.UserTimesInfo;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.User;
-import com.team.backend.service.impl.utils.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +27,7 @@ public class getTimesInfo {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
 
         if(user.getRole()==1){
-            if(No!=null){
+            if(!No.isEmpty()){
                 if(No.length() == 6){
                     //表示是小组，而不是固定成员
                     queryWrapper.eq("team_no",No);
@@ -48,7 +41,7 @@ public class getTimesInfo {
             }
             userList = userMapper.selectList(queryWrapper);
         }else{
-            if(No!=null){
+            if(!No.isEmpty()){
                 //是固定学号
                 queryWrapper.eq("student_no",No);
             }else{
@@ -62,7 +55,7 @@ public class getTimesInfo {
 
     public List getPageList(List totalList,int pageSize,int pageNum){
         int totalCount = totalList.size(); //总数量
-        int pageCount = 0; //总页数
+        int pageCount; //总页数
         List<Object> subyList = null;
         int m = totalCount % pageSize;
         if (m > 0) {

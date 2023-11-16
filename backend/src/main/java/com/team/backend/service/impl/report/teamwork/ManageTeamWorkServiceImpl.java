@@ -33,12 +33,6 @@ public class ManageTeamWorkServiceImpl implements ManageTeamWorkService {
         User user = loginUser.getUser();
 
         Date now = new Date();
-
-//        QueryWrapper<ReportTeamWork> updateWrapper = new QueryWrapper<>();
-//        updateWrapper.eq("student_no",user.getStudentNo()).eq("report_id",reportInfo.getId());
-//
-//        reportTeamWorkMapper.delete(updateWrapper);
-
         for (TeamWorks teamWork:reportInfo.getTeamWorks()) {
             ReportTeamWork reportTeamWork = new ReportTeamWork(
                     null,
@@ -77,7 +71,7 @@ public class ManageTeamWorkServiceImpl implements ManageTeamWorkService {
             queryWrapper.eq("student_no",getReportInfo.getStudentNo()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
         }else if(startYear<endYear){
             //跨年
-            //2022 23 - 2023 10
+            //eg:2022 23 - 2023 10
             for (int i = startYear; i <= endYear ; i++) {
                 if(i==startYear){
                     queryWrapper.eq("student_no",getReportInfo.getStudentNo()).eq("year",i).ge("week",startWeek);

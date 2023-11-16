@@ -40,14 +40,14 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
-        if(user.getRole()!=1 && user.getRole()!=2){
+        if (user.getRole() != 1 && user.getRole() != 2) {
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
-        List<User> userList = getTimesInfo.getUserList(user, getReportInfo.getStudentNo());
+        List<User> userList = getTimesInfo.getUserList(user, getReportInfo.getNo());
 
         List<UserTimesInfo> userTimesInfos = new ArrayList<>();
-        for(User userInfo:userList){
+        for (User userInfo : userList) {
             QueryWrapper<WeeklyReport> queryWrapper1 = new QueryWrapper<>();
             int startYear = getReportInfo.getStartTimeInfo().getYear();
             int endYear = getReportInfo.getEndTimeInfo().getYear();
@@ -55,29 +55,29 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
             int endWeek = getReportInfo.getEndTimeInfo().getWeek();
 
             if (startYear == endYear) {
-                queryWrapper1.eq("student_no",userInfo.getStudentNo()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
-            }else if(startYear<endYear){
+                queryWrapper1.eq("student_no", userInfo.getStudentNo()).eq("year", startYear).ge("week", startWeek).le("week", endWeek);
+            } else if (startYear < endYear) {
                 //跨年
                 //eg:2022 23 - 2023 10
-                for (int i = startYear; i <= endYear ; i++) {
-                    if(i==startYear){
-                        queryWrapper1.eq("student_no",userInfo.getStudentNo()).eq("year",i).ge("week",startWeek);
-                    }else if(i==endYear){
-                        queryWrapper1.or().eq("student_no",userInfo.getStudentNo()).eq("year",i).le("week",endWeek);
-                    }else{
-                        queryWrapper1.or().eq("student_no",userInfo.getStudentNo()).eq("year",i);
+                for (int i = startYear; i <= endYear; i++) {
+                    if (i == startYear) {
+                        queryWrapper1.eq("student_no", userInfo.getStudentNo()).eq("year", i).ge("week", startWeek);
+                    } else if (i == endYear) {
+                        queryWrapper1.or().eq("student_no", userInfo.getStudentNo()).eq("year", i).le("week", endWeek);
+                    } else {
+                        queryWrapper1.or().eq("student_no", userInfo.getStudentNo()).eq("year", i);
                     }
                 }
             }
 
 
             List<WeeklyReport> weeklyReportList = weeklyReportMapper.selectList(queryWrapper1);
-            
+
             String teamName = null;
             QueryWrapper<TeamInfo> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.eq("no",userInfo.getTeamNo());
+            queryWrapper2.eq("no", userInfo.getTeamNo());
             TeamInfo teamInfoFind = teamInfoMapper.selectOne(queryWrapper2);
-            if(teamInfoFind!=null){
+            if (teamInfoFind != null) {
                 teamName = teamInfoFind.getTeamname();
             }
 
@@ -96,15 +96,19 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
         }
 
         //使用List接口的方法排序
-        userTimesInfos.sort((o1, o2) -> o1.getTimes()-o2.getTimes());
+        userTimesInfos.sort((o1, o2) -> o1.getTimes() - o2.getTimes());
+        List pageList = null;
 
-        List pageList = getTimesInfo.getPageList(userTimesInfos, pageSize, pageNum);
+        if(!userTimesInfos.isEmpty()){
+            pageList = getTimesInfo.getPageList(userTimesInfos, pageSize, pageNum);
+        }
 
-        Map<String,Object> res = new HashMap<>();
-        res.put("userTimesInfo",pageList);
-        res.put("total",userTimesInfos.size());
-        res.put("size",pageSize);
-        res.put("current",pageNum);
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("userTimesInfo", pageList);
+        res.put("total", userTimesInfos.size());
+        res.put("size", pageSize);
+        res.put("current", pageNum);
         return Result.success(res);
     }
 }

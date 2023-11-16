@@ -3,9 +3,12 @@ package com.team.backend.service.impl.report.teamwork;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
+import com.team.backend.dto.resp.UserTeamWorkInfo;
 import com.team.backend.mapper.ReportTeamWorkMapper;
+import com.team.backend.mapper.TeamInfoMapper;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.ReportTeamWork;
+import com.team.backend.pojo.TeamInfo;
 import com.team.backend.pojo.User;
 import com.team.backend.service.impl.report.utils.getTimesInfo;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
@@ -27,6 +30,8 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
     ReportTeamWorkMapper reportTeamWorkMapper;
     @Autowired
     getTimesInfo getTimesInfo;
+    @Autowired
+    TeamInfoMapper teamInfoMapper;
     @Override
     public Result getUserTimeTeamWork(WeeklyGetWorkType getReportInfo, int pageNum, int pageSize) {
 
@@ -39,7 +44,7 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
 
         List<UserTeamWorkInfo> userTeamWorkInfos = new ArrayList<>();
 
-        List<User> userList = getTimesInfo.getUserList(user,getReportInfo.getStudentNo());
+        List<User> userList = getTimesInfo.getUserList(user,getReportInfo.getNo());
 
         for(User userInfo:userList){
             QueryWrapper<ReportTeamWork> queryWrapper1 = new QueryWrapper<>();
@@ -80,11 +85,18 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
                 durationSum+=report.getDuration();
             }
 
+            QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("no",userInfo.getTeamNo());
+            TeamInfo teamInfo = teamInfoMapper.selectOne(queryWrapper);
+
             UserTeamWorkInfo userTeamWorkInfo = new UserTeamWorkInfo(
                     userInfo.getId(),
-                    userInfo.getUsername(),
                     userInfo.getStudentNo(),
+                    userInfo.getRole(),
+                    userInfo.getUsername(),
                     userInfo.getPhoto(),
+                    teamInfo.getNo(),
+                    teamInfo.getTeamname(),
                     reportTeamWorkList.size(),
                     durationSum,
                     reportTeamWorkList
@@ -93,15 +105,13 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
             userTeamWorkInfos.add(userTeamWorkInfo);
 
         }
-        userTeamWorkInfos.sort(new Comparator<UserTeamWorkInfo>() {//使用List接口的方法排序
-            @Override
-            public int compare(UserTeamWorkInfo o1, UserTeamWorkInfo o2) {
-                return -1*(o1.getWorkTotalDuration()-o2.getWorkTotalDuration());
-            }
-        });
+        //使用List接口的方法排序
+        userTeamWorkInfos.sort((o1, o2) -> -1*(o1.getWorkTotalDuration()-o2.getWorkTotalDuration()));
 
-        List pageList = getTimesInfo.getPageList(userTeamWorkInfos, pageSize, pageNum);
-
+        List pageList = null;
+        if(!userTeamWorkInfos.isEmpty()){
+            pageList = getTimesInfo.getPageList(userTeamWorkInfos, pageSize, pageNum);
+        }
 
         Map<String,Object> res = new HashMap<>();
         res.put("userTimesTeamWorkInfo",pageList);
@@ -111,18 +121,4 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
         return Result.success(res);
     }
 
-    @Getter
-    @Setter
-    @EqualsAndHashCode
-    @AllArgsConstructor
-    @NoArgsConstructor
-    private class UserTeamWorkInfo{
-        private int id;
-        private String name;
-        private String studentNo;
-        private String photo;
-        private int workTimes;
-        private int workTotalDuration;
-        private List<ReportTeamWork> teamWorksList;
-    }
 }

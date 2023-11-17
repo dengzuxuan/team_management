@@ -15,10 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class GetTeamInfoServiceImpl implements GetTeamInfoService {
@@ -56,7 +53,7 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
         UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
         User user = loginUser.getUser();
 
-        Map<String,Object> teamDeatilInfos = new HashMap<>();
+        ArrayList<Map<String,Object>> teamDeatilInfos = new ArrayList<>();
         if(user.getRole() == 1){//导师角色
             QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("admin_no",user.getStudentNo());
@@ -81,26 +78,29 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
                     User leaderUser = userMapper.selectOne(queryWrapper2);
                     teamMembers.add(0,leaderUser);
                 }
-                teamDeatilInfo.put("userinfos",teamMembers);
-                teamDeatilInfo.put("teaminfo",teamInfo);
-                teamDeatilInfos.put(teamInfo.getTeamname(),teamDeatilInfo);
+                teamDeatilInfo.put("members",teamMembers);
+                teamDeatilInfo.put("teamname",teamInfo.getTeamname());
+                teamDeatilInfo.put("no",teamInfo.getNo());
+                teamDeatilInfos.add(teamDeatilInfo);
             }
-        }else if(user.getRole() == 2){//组长角色
-            Map<String,Object> teamDeatilInfo = new HashMap<>();
-            QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("leader_no",user.getStudentNo());
-            TeamInfo teamInfo = teamInfoMapper.selectOne(queryWrapper);
-
-            QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.select(
-                    User.class,info->!info.getColumn().equals("password_real")
-                            && !info.getColumn().equals("password")
-            ).eq("leader_no",user.getStudentNo());
-            List<User> teamMembers = userMapper.selectList(queryWrapper1);
-
-            teamDeatilInfo.put("userinfos",teamMembers);
-            teamDeatilInfo.put("teaminfo",teamInfo);
-            teamDeatilInfos.put(teamInfo.getTeamname(),teamDeatilInfo);
+        }else {
+            return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
+            //组长角色
+//            Map<String,Object> teamDeatilInfo = new HashMap<>();
+//            QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
+//            queryWrapper.eq("leader_no",user.getStudentNo());
+//            TeamInfo teamInfo = teamInfoMapper.selectOne(queryWrapper);
+//
+//            QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
+//            queryWrapper1.select(
+//                    User.class,info->!info.getColumn().equals("password_real")
+//                            && !info.getColumn().equals("password")
+//            ).eq("leader_no",user.getStudentNo());
+//            List<User> teamMembers = userMapper.selectList(queryWrapper1);
+//
+//            teamDeatilInfo.put("userinfos",teamMembers);
+//            teamDeatilInfo.put("teaminfo",teamInfo);
+//            teamDeatilInfos.put(teamInfo.getTeamname(),teamDeatilInfo);
         }
         return Result.success(teamDeatilInfos);
     }

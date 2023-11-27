@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+import static com.team.backend.utils.common.consts.roleConst.LEADERROLE;
+
 @Service
 public class CheckApplySeriveImpl implements CheckApplyService {
     @Autowired
@@ -32,7 +35,7 @@ public class CheckApplySeriveImpl implements CheckApplyService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
 
-        if(user.getRole()!=2 && user.getRole()!=1){
+        if(user.getRole()!=LEADERROLE && user.getRole()!=ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 

@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+
 /**
  * 新增组员
  */
@@ -32,7 +34,7 @@ public class AddMemberServiceImpl implements AddMemberService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User adminUser = loginUser.getUser();
 
-        if(adminUser.getRole()!=1){
+        if(adminUser.getRole()!=ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 

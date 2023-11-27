@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.Objects;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+import static com.team.backend.utils.common.consts.roleConst.LEADERROLE;
+
 @Service
 public class AddReportCommentServiceImpl implements AddReportCommentService {
     @Autowired
@@ -48,12 +51,12 @@ public class AddReportCommentServiceImpl implements AddReportCommentService {
         queryWrapper.eq("student_no",weeklyReport.getStudentNo());
         User reportUser = userMapper.selectOne(queryWrapper);
 
-        if(user.getRole()==1){
+        if(user.getRole()==ADMINROLE){
             roleGroup = 1;
             if(!Objects.equals(reportUser.getAdminNo(), user.getStudentNo())){
                 return Result.build(null, ResultCodeEnum.REPORT_COMMENT_NOT_ADMIN);
             }
-        }else if(user.getRole()==2){
+        }else if(user.getRole()==LEADERROLE){
             roleGroup = 2;
             if(!Objects.equals(reportUser.getLeaderNo(), user.getStudentNo())){
                 if(Objects.equals(user.getStudentNo(), reportUser.getStudentNo())){
@@ -79,9 +82,9 @@ public class AddReportCommentServiceImpl implements AddReportCommentService {
         );
 
         //todo 变更状态 未评论->已评论
-        if(user.getRole()==1 || user.getRole()==2){
+        if(user.getRole()==ADMINROLE || user.getRole()==LEADERROLE){
                 UpdateWrapper<WeeklyReport> updateWrapper = new UpdateWrapper<>();
-                if(user.getRole()==1){
+                if(user.getRole()==ADMINROLE){
                     updateWrapper.eq("id",commentAddInfo.getReportId()).set("admin_status",2);
                 }else {
                     updateWrapper.eq("id",commentAddInfo.getReportId()).set("leader_status",2);

@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+import static com.team.backend.utils.common.consts.roleConst.TEAMMEMBERROLE;
+
 /**
  * 将组员踢出小组
  */
@@ -29,7 +32,7 @@ public class DelMemberImpl implements DelMemberService {
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User adminUser = loginUser.getUser();
-        if(adminUser.getRole()!=1){
+        if(adminUser.getRole()!=ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
@@ -50,7 +53,7 @@ public class DelMemberImpl implements DelMemberService {
         }
 
 
-        if(user.getRole()!=3){
+        if(user.getRole()!=TEAMMEMBERROLE){
             return Result.build(null,ResultCodeEnum.USER_IS_LEADER);
         }
 

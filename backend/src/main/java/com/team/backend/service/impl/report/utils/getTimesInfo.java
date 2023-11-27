@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+
 /**
  * @ClassName getTimesInfo
  * @Description TODO
@@ -26,7 +28,7 @@ public class getTimesInfo {
         List<User> userList = new ArrayList<>();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
 
-        if(user.getRole()==1){
+        if(user.getRole()==ADMINROLE){
             if(!No.isEmpty()){
                 if(No.length() == 6){
                     //表示是小组，而不是固定成员

@@ -16,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+
 @Service
 public class RecoverApplyServiceImpl implements RecoverApplyService {
     @Autowired
@@ -28,7 +30,7 @@ public class RecoverApplyServiceImpl implements RecoverApplyService {
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
         User user = loginUser.getUser();
-        if(user.getRole()!=1){
+        if(user.getRole()!=ADMINROLE){
             return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 

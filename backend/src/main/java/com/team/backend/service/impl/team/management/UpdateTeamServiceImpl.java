@@ -15,6 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+import static com.team.backend.utils.common.consts.roleConst.LEADERROLE;
+
 @Service
 public class UpdateTeamServiceImpl implements UpdateTeamInfoService {
     @Autowired
@@ -36,7 +39,7 @@ public class UpdateTeamServiceImpl implements UpdateTeamInfoService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
 
-        if(user.getRole()!=1 && user.getRole()!=2){
+        if(user.getRole()!=ADMINROLE && user.getRole()!=LEADERROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 

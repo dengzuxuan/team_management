@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.team.backend.utils.common.consts.roleConst.*;
+
 @Service
 public class GetTeamInfoServiceImpl implements GetTeamInfoService {
     @Autowired
@@ -32,11 +34,11 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
         User user = loginUser.getUser();
 
         if(StudentNo==null){
-            if(user.getRole()==2){ //组长
+            if(user.getRole()==LEADERROLE){ //组长
                 StudentNo = user.getStudentNo();
-            }else if(user.getRole()==3){ //组员
+            }else if(user.getRole()==TEAMMEMBERROLE){ //组员
                 StudentNo = user.getLeaderNo();
-            } else if(user.getRole()==1){
+            } else if(user.getRole()==ADMINROLE){
                 return Result.build(null,ResultCodeEnum.PARAMS_WRONG);
             }
         }
@@ -54,7 +56,7 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
         User user = loginUser.getUser();
 
         ArrayList<Object> teamDeatilInfos = new ArrayList<>();
-        if(user.getRole() == 1){//导师角色
+        if(user.getRole() == ADMINROLE){//导师角色
             QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("admin_no",user.getStudentNo());
             List<TeamInfo> teamInfos = teamInfoMapper.selectList(queryWrapper);
@@ -112,7 +114,7 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
 
-        if(user.getRole()!=1 && user.getRole()!=2){
+        if(user.getRole()!=ADMINROLE && user.getRole()!=LEADERROLE){
             return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
@@ -132,7 +134,7 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
 
-        if(user.getRole()!=1){
+        if(user.getRole()!=ADMINROLE){
             return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 

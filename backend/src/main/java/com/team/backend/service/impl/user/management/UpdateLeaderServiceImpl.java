@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+import static com.team.backend.utils.common.consts.roleConst.*;
+
 /**
  * 切换组长
  */
@@ -36,7 +38,7 @@ public class UpdateLeaderServiceImpl implements UpdateLeaderService {
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User adminUser = loginUser.getUser();
-        if(adminUser.getRole()!=1){
+        if(adminUser.getRole()!=ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
@@ -54,7 +56,7 @@ public class UpdateLeaderServiceImpl implements UpdateLeaderService {
         if(!Objects.equals(adminUser.getStudentNo(), oldUser.getAdminNo())){
             return Result.build(null,ResultCodeEnum.USER_ADMIN_WRONG);
         }
-        if(oldUser.getRole()!=2 || newUser.getRole()!=3 || !Objects.equals(oldUser.getStudentNo(), newUser.getLeaderNo())){
+        if(oldUser.getRole()!=LEADERROLE || newUser.getRole()!=TEAMMEMBERROLE || !Objects.equals(oldUser.getStudentNo(), newUser.getLeaderNo())){
             return Result.build(null,ResultCodeEnum.USER_CHANGE_WRONG);
         }
 

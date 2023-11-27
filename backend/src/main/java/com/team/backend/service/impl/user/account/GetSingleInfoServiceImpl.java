@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+
 @Service
 public class GetSingleInfoServiceImpl implements GetSingleInfoService {
     @Autowired
@@ -21,7 +23,7 @@ public class GetSingleInfoServiceImpl implements GetSingleInfoService {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser  = (UserDetailsImpl)authenticationToken.getPrincipal();
-        if(loginUser.getUser().getRole()!=1){
+        if(loginUser.getUser().getRole()!=ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 

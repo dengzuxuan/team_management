@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.team.backend.utils.common.consts.roleConst.*;
 import static java.lang.Integer.parseInt;
 
 @Service
@@ -44,7 +45,7 @@ public class RegisterServiceImpl implements RegisterService {
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
         User loginuser = loginUser.getUser();
-        if(loginuser.getRole()!=1){
+        if(loginuser.getRole()!=ADMINROLE){
             return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
         ResultCodeEnum codeEnum = registerExcelService.checkUserInfoInput(user,loginuser.getStudentNo());
@@ -60,7 +61,7 @@ public class RegisterServiceImpl implements RegisterService {
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
         User loginuser = loginUser.getUser();
-        if(loginuser.getRole()!=1){
+        if(loginuser.getRole()!=ADMINROLE){
             return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
@@ -103,10 +104,21 @@ public class RegisterServiceImpl implements RegisterService {
         }
         String encodedPassword = passwordEncoder.encode(password);
         Date now = new Date();
-        User newuser = new User(null,no,leaderno,adminNo,user.getUsername(),encodedPassword,tel,email,3,cardno,user.getStudentNo(),password,now,now);
+        User newuser = new User(null,no,leaderno,adminNo,user.getUsername(),encodedPassword,tel,email,MEMBERROLE,cardno,user.getStudentNo(),password,now,now);
 
-        if("组长".equals(user.getRole())){
-            newuser.setRole(2);
+        if(LEADERFLAG.equals(user.getRole())){
+            newuser.setRole(LEADERROLE);
+            findTeamInfo.setLeaderNo(user.getStudentNo());
+            teamInfoMapper.updateById(findTeamInfo);
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("team_no",user.getTeamNo());
+            List<User> memberUsers = userMapper.selectList(queryWrapper);
+            for(User member:memberUsers){
+                member.setLeaderNo(user.getStudentNo());
+                userMapper.updateById(member);
+            }
+        }else if(MEMBERFLAG.equals(user.getRole())){
+            newuser.setRole(TEAMMEMBERROLE);
             findTeamInfo.setLeaderNo(user.getStudentNo());
             teamInfoMapper.updateById(findTeamInfo);
         }

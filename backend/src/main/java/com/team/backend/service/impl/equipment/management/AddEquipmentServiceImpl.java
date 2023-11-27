@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+import static com.team.backend.utils.common.consts.roleConst.LEADERROLE;
+
 @Service
 public class AddEquipmentServiceImpl implements AddEquipmentService {
     @Autowired
@@ -33,11 +36,11 @@ public class AddEquipmentServiceImpl implements AddEquipmentService {
         User user = loginUser.getUser();
         String adminId = user.getStudentNo();
 
-        if(user.getRole()!=1 && user.getRole()!=2){
+        if(user.getRole()!=ADMINROLE && user.getRole()!=LEADERROLE){
             return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
-        if(user.getRole()==2){
+        if(user.getRole()==LEADERROLE){
             adminId=user.getAdminNo();
         }
 

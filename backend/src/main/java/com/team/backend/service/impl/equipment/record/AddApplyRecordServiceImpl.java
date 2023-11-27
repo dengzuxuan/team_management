@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+
 @Service
 public class AddApplyRecordServiceImpl implements AddApplyRecordService {
     @Autowired
@@ -70,7 +72,7 @@ public class AddApplyRecordServiceImpl implements AddApplyRecordService {
         );
         equipmentRecordMapper.insert(newEquipmentRecord);
         //管理员自动审核通过
-        if(user.getRole()==1){
+        if(user.getRole()==ADMINROLE){
             checkApplySerive.checkApplySerive(newEquipmentRecord.getId(),"pass","");
         }
 

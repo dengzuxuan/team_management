@@ -29,6 +29,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+
 @Service
 public class AddTeamServiceImpl implements AddTeamService {
     @Autowired
@@ -41,7 +43,7 @@ public class AddTeamServiceImpl implements AddTeamService {
         UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
         User adminUser = loginUser.getUser();
 
-        if(adminUser.getRole()!=1){
+        if(adminUser.getRole()!=ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
@@ -62,7 +64,7 @@ public class AddTeamServiceImpl implements AddTeamService {
         UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
         User adminUser = loginUser.getUser();
 
-        if(adminUser.getRole()!=1){
+        if(adminUser.getRole()!=ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
@@ -93,7 +95,7 @@ public class AddTeamServiceImpl implements AddTeamService {
         UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
         User adminUser = loginUser.getUser();
 
-        if(adminUser.getRole()!=1){
+        if(adminUser.getRole()!=ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
         List<TeamExcelInfo> correctTeams= new ArrayList<>();

@@ -26,6 +26,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+import static com.team.backend.utils.common.consts.roleConst.LEADERROLE;
+
 @Service
 public class GetReportCommentServiceImpl implements GetReportCommentService {
     @Autowired
@@ -46,10 +49,10 @@ public class GetReportCommentServiceImpl implements GetReportCommentService {
         UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
         User loginuserUser = loginUser.getUser();
 
-        if((loginuserUser.getRole()==1 && weeklyReport.getAdminStatus()==0)|| (loginuserUser.getRole()==2 && weeklyReport.getLeaderStatus()==0)){
+        if((loginuserUser.getRole()==ADMINROLE && weeklyReport.getAdminStatus()==0)|| (loginuserUser.getRole()==LEADERROLE && weeklyReport.getLeaderStatus()==0)){
             UpdateWrapper<WeeklyReport> updateWrapper = new UpdateWrapper<>();
 
-            if(loginuserUser.getRole()==1){
+            if(loginuserUser.getRole()==ADMINROLE){
                 updateWrapper.eq("id",weeklyReport.getId()).set("admin_status",1);
             }else {
                 updateWrapper.eq("id",weeklyReport.getId()).set("leader_status",1);
@@ -90,9 +93,9 @@ public class GetReportCommentServiceImpl implements GetReportCommentService {
                     reportComment.getUpdateTime()
             );
 
-            if(reportComment.getRole()==1){
+            if(reportComment.getRole()==ADMINROLE){
                 adminGroupComments.add(groupComment);
-            }else if(reportComment.getRole()==2){
+            }else if(reportComment.getRole()==LEADERROLE){
                 leaderGroupComments.add(groupComment);
             }
 

@@ -29,6 +29,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.team.backend.utils.common.consts.roleConst.*;
+
 @Service
 public class RegisterExcelServiceImpl implements RegisterExcelService {
 
@@ -52,15 +54,13 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
     TeamInfoMapper teamInfoMapper;
     ResultCodeEnum resultCodeEnum = ResultCodeEnum.SUCCESS;
     int totalCnt=0;
-    private static final String leaderFalg = "组长";
-    private static final String memberFalg = "组员";
     @Override
     public Result registerExcel(MultipartFile file) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User adminUser = loginUser.getUser();
-        if(adminUser.getRole()!=1){
+        if(adminUser.getRole()!=ADMINROLE){
             return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
@@ -101,7 +101,7 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
                         continue;
                     }
                     usernameSet.add(userdata.getStudentNo());
-                    if(leaderFalg.equals(userdata.getRole())){
+                    if(LEADERFLAG.equals(userdata.getRole())){
                         if(userroleSet.contains(userdata.getTeamNo())){
                             user.failReason=ResultCodeEnum.FILE_WRONG_LEADER_REPEAT.getMessage();
                             wrongUsers.add(user);
@@ -194,7 +194,7 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
         //如果有分配小组部分
         if(userdata.getTeamNo()!=null &&userdata.getTeamName()!=null&&userdata.getRole()!=null){
             //角色信息是否正确
-            if(!leaderFalg.equals(userdata.getRole()) && !memberFalg.equals(userdata.getRole())){
+            if(!LEADERFLAG.equals(userdata.getRole()) && !MEMBERFLAG.equals(userdata.getRole())){
                 return ResultCodeEnum.INPUT_ROLE_WRONG;
             }
             //小组编号是否存在
@@ -209,8 +209,8 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
                 return ResultCodeEnum.INPUT_TEAM_NAME_CANT_MATCH;
             }
             //角色是否为组长 为组长则需检测excel中是否有组长（在前面） 以及 数据库中该小组是否有组长
-            if(Objects.equals(userdata.getRole(), leaderFalg)){
-                if ("".equals(teamInfoFind.getLeaderNo())){
+            if(Objects.equals(userdata.getRole(), LEADERFLAG)){
+                if (teamInfoFind.getLeaderNo()!=null){
                     return ResultCodeEnum.INPUT_LEADER_ALREAY_EXIST;
                 }
             }

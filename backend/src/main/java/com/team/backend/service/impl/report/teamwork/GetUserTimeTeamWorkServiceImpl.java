@@ -22,6 +22,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+import static com.team.backend.utils.common.consts.roleConst.LEADERROLE;
+
 @Service
 public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkService {
     @Autowired
@@ -38,7 +41,7 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
-        if(user.getRole()!=1 && user.getRole()!=2){
+        if(user.getRole()!=ADMINROLE && user.getRole()!=LEADERROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 

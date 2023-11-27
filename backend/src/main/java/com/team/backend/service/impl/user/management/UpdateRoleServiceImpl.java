@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
 import static java.lang.Integer.parseInt;
 
 /**
@@ -30,7 +31,7 @@ public class UpdateRoleServiceImpl implements UpdateRoleService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User adminUser = loginUser.getUser();
 
-        if (adminUser.getRole() != 1) {
+        if (adminUser.getRole() != ADMINROLE) {
             return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 

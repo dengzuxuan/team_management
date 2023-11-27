@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+
 /**
  * 获取没有分配到小组中的组员
  */
@@ -29,7 +31,7 @@ public class GetNoneListServiceImpl implements GetNoneListService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User adminUser = loginUser.getUser();
 
-        if(adminUser.getRole()!=1){
+        if(adminUser.getRole()!=ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 

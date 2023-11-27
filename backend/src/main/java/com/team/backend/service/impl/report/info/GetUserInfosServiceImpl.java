@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+import static com.team.backend.utils.common.consts.roleConst.LEADERROLE;
+
 @Service
 public class GetUserInfosServiceImpl implements GetUserInfosService {
     @Autowired
@@ -33,12 +36,12 @@ public class GetUserInfosServiceImpl implements GetUserInfosService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
 
-        if(user.getRole()!=1 && user.getRole()!=2){
+        if(user.getRole()!=ADMINROLE && user.getRole()!=LEADERROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        if(user.getRole()==1){
+        if(user.getRole()==ADMINROLE){
             //管理员
             queryWrapper.eq("admin_no",user.getStudentNo()).ne("role",1).select(
                     User.class,info->!info.getColumn().equals("password_real")
@@ -57,7 +60,7 @@ public class GetUserInfosServiceImpl implements GetUserInfosService {
         List<UserInfo> userInfos = new ArrayList<>();
         for(User userInfo:users){
             int notReadCnt = 0;
-            if(user.getRole()==1){
+            if(user.getRole()==ADMINROLE){
 
                 QueryWrapper<WeeklyReport> queryWrapper1 = new QueryWrapper<>();
                 queryWrapper1.eq("student_no",userInfo.getStudentNo()).eq("admin_status",0);

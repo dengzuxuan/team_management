@@ -9,6 +9,7 @@ import com.team.backend.pojo.*;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.user.account.UpdateInfoService;
 import com.team.backend.dto.req.MemberChangeType;
+import com.team.backend.utils.common.excelType.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,34 +34,14 @@ public class UpdateInfoServiceImpl implements UpdateInfoService {
     private TeamInfoMapper teamInfoMapper;
     @Autowired
     private WeeklyReportMapper weeklyReportMapper;
+    @Autowired
+    private RegisterExcelServiceImpl registerExcelService;
 
     @Override
-    public Result updateInfo(String email, String cardno, String phone,String username) {
-        String phoneRegex = "^[1][3,4,5,7,8][0-9]{9}$";
-        Pattern phonePatten = Pattern.compile(phoneRegex);
-        Matcher phoneMatcher = phonePatten.matcher(phone);
-        if(!phone.equals("") && !phoneMatcher.matches()){
-            return Result.build(null, ResultCodeEnum.INPUT_TEL_PARAM_WRONG);
-        }
-
-
-        String emailRegex = "^([a-zA-Z\\d][\\w-]{2,})@(\\w{2,})\\.([a-z]{2,})(\\.[a-z]{2,})?$";
-        Pattern emailPatten = Pattern.compile(emailRegex);
-        Matcher emailMatcher = emailPatten.matcher(email);
-        if(!email.equals("") && !emailMatcher.matches()){
-            return Result.build(null, ResultCodeEnum.INPUT_EMAIL_PARAM_WRONG);
-        }
-        UsernamePasswordAuthenticationToken authenticationToken=
-                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
-        User user =  loginUser.getUser();
-
-        user.setEmail(email);
-        user.setCardNo(cardno);
-        user.setPhone(phone);
-        user.setUsername(username);
-
-        userMapper.updateById(user);
+    public Result updateInfo(UserType user) {
+//        registerExcelService.checkUserInfoInput(user)
+//
+//        userMapper.updateById(user);
         return Result.success(null);
     }
 
@@ -77,6 +58,7 @@ public class UpdateInfoServiceImpl implements UpdateInfoService {
             return Result.build(null,ResultCodeEnum.USER_NOT_EXIST);
         }
 
+        //这些写的太扯淡了
         //1.更新设备中的信息 admin_no creator recipient former_recipient
         updateEquipement(oriStudentNo,newStudentNo);
         //2.更新设备记录 student_no check_no

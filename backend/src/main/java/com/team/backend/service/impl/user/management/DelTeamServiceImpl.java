@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+import static com.team.backend.utils.common.consts.roleConst.LEADERROLE;
+
 
 /**
  * 解散小组
@@ -34,7 +37,7 @@ public class DelTeamServiceImpl implements DelTeamService {
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User adminUser = loginUser.getUser();
-        if(adminUser.getRole()!=1){
+        if(adminUser.getRole()!=ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
@@ -45,7 +48,7 @@ public class DelTeamServiceImpl implements DelTeamService {
             return Result.build(null, ResultCodeEnum.USER_NOT_EXIST);
         }
 
-        if(user.getRole()!=2){
+        if(user.getRole()!=LEADERROLE){
             return Result.build(null,ResultCodeEnum.USER_ROLE_WRONG);
         }
 

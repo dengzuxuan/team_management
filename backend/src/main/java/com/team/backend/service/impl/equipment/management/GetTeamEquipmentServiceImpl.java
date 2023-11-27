@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.team.backend.utils.common.consts.roleConst.LEADERROLE;
+import static com.team.backend.utils.common.consts.roleConst.TEAMMEMBERROLE;
+
 @Service
 public class GetTeamEquipmentServiceImpl implements GetTeamEquipmentService {
     @Autowired
@@ -41,7 +44,7 @@ public class GetTeamEquipmentServiceImpl implements GetTeamEquipmentService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
         String adminNo = user.getStudentNo();
-        if(user.getRole()==2 || user.getRole()==3){
+        if(user.getRole()==LEADERROLE || user.getRole()==TEAMMEMBERROLE){
             adminNo = user.getAdminNo();
         }
         Map<String,Object> res = new HashMap<>();

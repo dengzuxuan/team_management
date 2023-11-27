@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
+import com.team.backend.dto.resp.ReportCommentGroup;
+import com.team.backend.dto.resp.ReportCommentType;
 import com.team.backend.mapper.ReportCommentMapper;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.mapper.WeeklyReportMapper;
@@ -73,7 +75,7 @@ public class GetReportCommentServiceImpl implements GetReportCommentService {
             queryWrapper2.select(
                     User.class,info->!info.getColumn().equals("password_real")
                             && !info.getColumn().equals("password")
-            ).eq("student_no",reportComment.getStudentNo());
+            ).eq("student_id",reportComment.getStudentId());
             User user = userMapper.selectOne(queryWrapper2);
 
             int isMyself = 0;
@@ -108,35 +110,5 @@ public class GetReportCommentServiceImpl implements GetReportCommentService {
         );
 
         return Result.success(reportCommentGroup);
-    }
-
-    @Getter
-    @Setter
-    @Data
-    @EqualsAndHashCode
-    @AllArgsConstructor
-    @NoArgsConstructor
-    private class ReportCommentGroup{
-        List<ReportCommentType> leaderGroupComments;
-        List<ReportCommentType> adminGroupComments;
-    }
-    @Getter
-    @Setter
-    @Data
-    @EqualsAndHashCode
-    @AllArgsConstructor
-    @NoArgsConstructor
-    private class ReportCommentType{
-        @TableId(type = IdType.AUTO)
-        private Integer id;
-        private Integer ReportId;
-        private User userInfo;
-        private Integer role;
-        private String content;
-        private Integer isMyself;
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-        private Date createTime;
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-        private Date updateTime;
     }
 }

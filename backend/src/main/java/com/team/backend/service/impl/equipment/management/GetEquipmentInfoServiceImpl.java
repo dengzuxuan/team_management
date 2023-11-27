@@ -38,11 +38,11 @@ public class GetEquipmentInfoServiceImpl implements GetEquipmentInfoService {
             return Result.build(null, ResultCodeEnum.EQUIPMENT_NOT_EXIST);
         }
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        userQueryWrapper.select("student_no","username").eq("student_no",equipment.getRecipient());
+        userQueryWrapper.select("student_no","username").eq("id",equipment.getRecipient());
         User recipent =  userMapper.selectOne(userQueryWrapper);
 
         QueryWrapper<User> userQueryWrapper2 = new QueryWrapper<>();
-        userQueryWrapper2.select("student_no","username").eq("student_no",equipment.getFormerRecipient());
+        userQueryWrapper2.select("student_no","username").eq("id",equipment.getFormerRecipient());
         User formerRecipent =  userMapper.selectOne(userQueryWrapper2);
 
 
@@ -89,7 +89,7 @@ public class GetEquipmentInfoServiceImpl implements GetEquipmentInfoService {
                     //设备更新
                     UpdateWrapper<Equipment> equipmentUpdateWrapper = new UpdateWrapper<>();
                     equipmentUpdateWrapper.eq("id",equipmentId);
-                    equipmentUpdateWrapper.set("status",1).set("former_recipient",equipmentRecord.getStudentNo()).set("recipient",null);
+                    equipmentUpdateWrapper.set("status",1).set("former_recipient",equipmentRecord.getStudentId()).set("recipient",null);
                     equipmentMapper.update(null,equipmentUpdateWrapper);
 
                     //以及更新记录

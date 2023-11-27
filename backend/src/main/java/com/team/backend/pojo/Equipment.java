@@ -28,8 +28,8 @@ public class Equipment implements Serializable {
     private Integer status;
     private String adminNo;
     private String creator;
-    private String recipient;
-    private String formerRecipient;
+    private Integer recipient;
+    private Integer formerRecipient;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date createTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")

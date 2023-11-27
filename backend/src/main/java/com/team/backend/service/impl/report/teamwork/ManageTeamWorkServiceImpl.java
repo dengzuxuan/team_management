@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.team.backend.config.result.Result;
 import com.team.backend.mapper.ReportTeamWorkMapper;
+import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.ReportTeamWork;
 import com.team.backend.pojo.User;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
@@ -24,6 +25,8 @@ import java.util.*;
 public class ManageTeamWorkServiceImpl implements ManageTeamWorkService {
     @Autowired
     ReportTeamWorkMapper reportTeamWorkMapper;
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public void addTeamWork(WeeklyReportType reportInfo) {
@@ -39,7 +42,7 @@ public class ManageTeamWorkServiceImpl implements ManageTeamWorkService {
                     reportInfo.getId(),
                     reportInfo.getYear(),
                     reportInfo.getWeek(),
-                    user.getStudentNo(),
+                    user.getId(),
                     teamWork.getContent(),
                     teamWork.getDuration(),
                     teamWork.getId(),
@@ -64,21 +67,24 @@ public class ManageTeamWorkServiceImpl implements ManageTeamWorkService {
         int endYear = getReportInfo.getEndTimeInfo().getYear();
         int startWeek = getReportInfo.getStartTimeInfo().getWeek();
         int endWeek = getReportInfo.getEndTimeInfo().getWeek();
+        QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("student_no",getReportInfo.getStudentNo());
+        User userfind = userMapper.selectOne(queryWrapper1);
 
         QueryWrapper<ReportTeamWork> queryWrapper = new QueryWrapper<>();
 
         if (startYear == endYear) {
-            queryWrapper.eq("student_no",getReportInfo.getStudentNo()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
+            queryWrapper.eq("student_no",userfind.getId()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
         }else if(startYear<endYear){
             //跨年
             //eg:2022 23 - 2023 10
             for (int i = startYear; i <= endYear ; i++) {
                 if(i==startYear){
-                    queryWrapper.eq("student_no",getReportInfo.getStudentNo()).eq("year",i).ge("week",startWeek);
+                    queryWrapper.eq("student_id",userfind.getId()).eq("year",i).ge("week",startWeek);
                 }else if(i==endYear){
-                    queryWrapper.or().eq("student_no",getReportInfo.getStudentNo()).eq("year",i).le("week",endWeek);
+                    queryWrapper.or().eq("student_id",userfind.getId()).eq("year",i).le("week",endWeek);
                 }else{
-                    queryWrapper.or().eq("student_no",getReportInfo.getStudentNo()).eq("year",i);
+                    queryWrapper.or().eq("student_id",userfind.getId()).eq("year",i);
                 }
             }
         }

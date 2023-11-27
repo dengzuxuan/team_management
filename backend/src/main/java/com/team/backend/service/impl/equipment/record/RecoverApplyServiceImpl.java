@@ -57,7 +57,7 @@ public class RecoverApplyServiceImpl implements RecoverApplyService {
 
         UpdateWrapper<Equipment>updateWrapper1 = new UpdateWrapper<>();
         updateWrapper1.eq("id",equipemntid);
-        updateWrapper1.set("status",1).set("former_recipient",equipmentRecord.getStudentNo()).set("recipient",null);
+        updateWrapper1.set("status",1).set("former_recipient",equipmentRecord.getStudentId()).set("recipient",null);
         equipmentMapper.update(null,updateWrapper1);
 
         return Result.success(null);

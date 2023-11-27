@@ -3,6 +3,7 @@ package com.team.backend.service.impl.report.management;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
+import com.team.backend.mapper.UserMapper;
 import com.team.backend.mapper.WeeklyReportMapper;
 import com.team.backend.pojo.User;
 import com.team.backend.pojo.WeeklyReport;
@@ -22,6 +23,8 @@ import static com.team.backend.utils.common.consts.roleConst.LEADERROLE;
 public class GetUserAllReportServiceImpl implements GetUserAllReportService {
     @Autowired
     WeeklyReportMapper weeklyReportMapper;
+    @Autowired
+    UserMapper userMapper;
 
     @Autowired
     GetWeeklyReportServiceImpl getWeeklyReportService;
@@ -33,14 +36,18 @@ public class GetUserAllReportServiceImpl implements GetUserAllReportService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
 
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("student_no",studentNo);
+        User user1 = userMapper.selectOne(queryWrapper);
+
         if(user.getRole()!=ADMINROLE && user.getRole()!=LEADERROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
-        QueryWrapper<WeeklyReport> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("student_no",studentNo);
+        QueryWrapper<WeeklyReport> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("student_id",user1.getId());
 
-        Map<String,Object> res = getWeeklyReportService.getReportPage(pageNum,pageSize,queryWrapper);
+        Map<String,Object> res = getWeeklyReportService.getReportPage(pageNum,pageSize,queryWrapper2);
 
         return Result.success(res);
     }

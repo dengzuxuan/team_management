@@ -26,7 +26,7 @@ import java.util.Date;
 public class UserListInfo {
     private Integer id;
     private String teamNo;
-    private String leaderNo;
+    private Integer leaderId;
     private String adminNo;
     private String username;
     private String phone;

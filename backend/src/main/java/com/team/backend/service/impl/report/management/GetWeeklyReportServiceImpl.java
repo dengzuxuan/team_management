@@ -56,11 +56,11 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
 
         for (WeeklyReport report:weeklyReportList){
             QueryWrapper<ReportComment> queryWrapperLeader = new QueryWrapper<>();
-            queryWrapperLeader.eq("report_id",report.getId()).eq("role",2).ne("student_no",report.getStudentNo());
+            queryWrapperLeader.eq("report_id",report.getId()).eq("role",2).ne("student_id",report.getStudentId());
             List<ReportComment> reportLeaderComment = reportCommentMapper.selectList(queryWrapperLeader);
 
             QueryWrapper<ReportComment> queryWrapperAdmin = new QueryWrapper<>();
-            queryWrapperAdmin.eq("report_id",report.getId()).eq("role",1).ne("student_no",report.getStudentNo());
+            queryWrapperAdmin.eq("report_id",report.getId()).eq("role",1).ne("student_id",report.getStudentId());
             List<ReportComment> reportAdminComment = reportCommentMapper.selectList(queryWrapperAdmin);
             WeeklyReportType weeklyReportType = new WeeklyReportType(
                     report.getId(),

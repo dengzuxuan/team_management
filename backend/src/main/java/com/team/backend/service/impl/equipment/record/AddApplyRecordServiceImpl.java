@@ -62,7 +62,7 @@ public class AddApplyRecordServiceImpl implements AddApplyRecordService {
         EquipmentRecord newEquipmentRecord = new EquipmentRecord(
                 null,
                 record.getEquipmentId(),
-                user.getStudentNo(),
+                user.getId(),
                 reason,
                 record.getDeadlineTime(),
                 now,

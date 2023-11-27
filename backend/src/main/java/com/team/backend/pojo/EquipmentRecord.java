@@ -16,7 +16,7 @@ public class EquipmentRecord {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private Integer equipmentId;
-    private String studentNo;
+    private Integer studentId;
     private String applyReason;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date deadlineTime;

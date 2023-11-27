@@ -46,7 +46,7 @@ public class GetEquipmentRecordServiceImpl implements GetEquipmentRecordService 
             queryWrapper3.select(
                     User.class,info->!info.getColumn().equals("password_real")
                             && !info.getColumn().equals("password")
-            ).eq("student_no",record.getStudentNo());
+            ).eq("id",record.getStudentId());
             User applyInfo = userMapper.selectOne(queryWrapper3);
 
             RecordShowType recordShowType = new RecordShowType(

@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
-import static com.team.backend.utils.common.consts.roleConst.TEAMMEMBERROLE;
+import static com.team.backend.utils.common.consts.roleConst.*;
 
 /**
  * 将组员踢出小组
@@ -43,27 +42,24 @@ public class DelMemberImpl implements DelMemberService {
         if(user==null){
             return Result.build(null,ResultCodeEnum.USER_NAME_NOT_EXIST);
         }
+        if(user.getRole()==LEADERROLE){
+            return Result.build(null,ResultCodeEnum.USER_IS_LEADER);
+        }
 
-        queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("student_no",user.getLeaderNo());
-        User leaderUser = userMapper.selectOne(queryWrapper);
+        if(user.getRole()==MEMBERROLE){
+            return Result.build(null,ResultCodeEnum.USER_NOT_IN_TEAM);
+        }
 
+
+        User leaderUser = userMapper.selectById(user.getLeaderId());
         if(!Objects.equals(leaderUser.getAdminNo(), adminUser.getStudentNo())){
             return Result.build(null,ResultCodeEnum.USER_ADMIN_WRONG);
         }
 
-
-        if(user.getRole()!=TEAMMEMBERROLE){
-            return Result.build(null,ResultCodeEnum.USER_IS_LEADER);
-        }
-
-        if("".equals(user.getLeaderNo())){
-            return Result.build(null,ResultCodeEnum.USER_NOT_IN_TEAM);
-        }
-
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("student_no",user.getStudentNo());
-        updateWrapper.set("leader_no","");
+        updateWrapper.set("leader_id",null);
+        updateWrapper.set("no",null);
 
         userMapper.update(null,updateWrapper);
 

@@ -83,7 +83,7 @@ public class GetListServiceImpl implements GetListService {
             UserListInfo userListInfo = new UserListInfo(
                     member.getId(),
                     member.getTeamNo(),
-                    member.getLeaderNo(),
+                    member.getLeaderId(),
                     member.getAdminNo(),
                     member.getUsername(),
                     member.getPhone(),

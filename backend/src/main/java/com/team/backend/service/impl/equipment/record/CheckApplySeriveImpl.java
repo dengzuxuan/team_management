@@ -66,7 +66,7 @@ public class CheckApplySeriveImpl implements CheckApplyService {
             //设备状态记录修订
             UpdateWrapper<Equipment> equipmentUpdateWrapper = new UpdateWrapper<>();
             equipmentUpdateWrapper.eq("id",equipmentRecord.getEquipmentId());
-            equipmentUpdateWrapper.set("status",2).set("recipient",equipmentRecord.getStudentNo());
+            equipmentUpdateWrapper.set("status",2).set("recipient",equipmentRecord.getStudentId());
             equipmentMapper.update(null,equipmentUpdateWrapper);
 
         }else if("refuse".equals(status)){

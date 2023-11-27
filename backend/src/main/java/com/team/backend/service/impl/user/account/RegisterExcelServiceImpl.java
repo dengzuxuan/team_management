@@ -210,7 +210,7 @@ public class RegisterExcelServiceImpl implements RegisterExcelService {
             }
             //角色是否为组长 为组长则需检测excel中是否有组长（在前面） 以及 数据库中该小组是否有组长
             if(Objects.equals(userdata.getRole(), LEADERFLAG)){
-                if (teamInfoFind.getLeaderNo()!=null){
+                if (teamInfoFind.getLeaderId()!=null){
                     return ResultCodeEnum.INPUT_LEADER_ALREAY_EXIST;
                 }
             }

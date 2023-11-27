@@ -23,7 +23,7 @@ public class WeeklyReport implements Serializable {
     private String weekPlan;
     private String teamworkInfos;
     private Integer teamworkDuration;
-    private String studentNo;
+    private Integer studentId;
     private Integer adminStatus;
     private Integer leaderStatus;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")

@@ -50,7 +50,7 @@ public class AddWeeklyReportServiceImpl implements AddWeeklyReportService {
                 JsonUtil.WeekPlanToJsonString(reportInfo.getWeekPlan()),
                 JsonUtil.ReportToJsonString(reportInfo.getTeamWorks()),
                 teamworkDuration,
-                user.getStudentNo(),
+                user.getId(),
                 0,
                 0,
                 null,

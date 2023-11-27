@@ -34,7 +34,7 @@ public class DelReportCommentServiceImpl implements DelReportCommentService {
             return Result.build(null, ResultCodeEnum.REPORT_NOT_EXIST);
         }
 
-        if(!Objects.equals(user.getStudentNo(), reportComment.getStudentNo())){
+        if(!Objects.equals(user.getId(), reportComment.getStudentId())){
             return Result.build(null, ResultCodeEnum.REPORT_COMMENT_USER_WRONG);
         }
 

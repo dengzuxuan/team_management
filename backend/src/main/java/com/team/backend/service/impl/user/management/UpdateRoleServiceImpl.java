@@ -26,50 +26,51 @@ public class UpdateRoleServiceImpl implements UpdateRoleService {
 
     @Override
     public Result updateRole(String studentNo,String role) {
-        UsernamePasswordAuthenticationToken authenticationToken =
-                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
-        User adminUser = loginUser.getUser();
-
-        if (adminUser.getRole() != ADMINROLE) {
-            return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
-        }
-
-        if(!isNumeric(role)||parseInt(role)!=2 && parseInt(role)!=3){
-            return Result.build(null, ResultCodeEnum.ROLE_PARAM_WRONG);
-        }
-
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("student_no",studentNo);
-        User user1 = userMapper.selectOne(queryWrapper);
-        if(user1==null){
-            return Result.build(null, ResultCodeEnum.USER_NAME_NOT_EXIST);
-        }
-
-        if(!"".equals(user1.getLeaderNo()) && parseInt(role)==2 ){
-            return Result.build(null, ResultCodeEnum.USER_ALREADY_IN_TEAM);
-        }
-
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("student_no",studentNo);
-        updateWrapper.set("role",parseInt(role));
-//        if(role.equals("2")){
-//            updateWrapper.set("admin_no",adminUser.getStudentNo());
+//        UsernamePasswordAuthenticationToken authenticationToken =
+//                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+//        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
+//        User adminUser = loginUser.getUser();
+//
+//        if (adminUser.getRole() != ADMINROLE) {
+//            return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
 //        }
-//        else if(role.equals("3")){
-//            updateWrapper.set("admin_no","");
+//
+//        if(!isNumeric(role)||parseInt(role)!=2 && parseInt(role)!=3){
+//            return Result.build(null, ResultCodeEnum.ROLE_PARAM_WRONG);
 //        }
-        userMapper.update(null,updateWrapper);
-
+//
+//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("student_no",studentNo);
+//        User user1 = userMapper.selectOne(queryWrapper);
+//        if(user1==null){
+//            return Result.build(null, ResultCodeEnum.USER_NAME_NOT_EXIST);
+//        }
+//
+//        if(!"".equals(user1.getLeaderNo()) && parseInt(role)==2 ){
+//            return Result.build(null, ResultCodeEnum.USER_ALREADY_IN_TEAM);
+//        }
+//
+//        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+//        updateWrapper.eq("student_no",studentNo);
+//        updateWrapper.set("role",parseInt(role));
+////        if(role.equals("2")){
+////            updateWrapper.set("admin_no",adminUser.getStudentNo());
+////        }
+////        else if(role.equals("3")){
+////            updateWrapper.set("admin_no","");
+////        }
+//        userMapper.update(null,updateWrapper);
+//
+//        return Result.success(null);
+//    }
+//    public static boolean isNumeric(String str){
+//        for (int i = 0; i < str.length(); i++) {
+//            if(!Character.isDigit(str.charAt(i))){
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
         return Result.success(null);
     }
-    public static boolean isNumeric(String str){
-        for (int i = 0; i < str.length(); i++) {
-            if(!Character.isDigit(str.charAt(i))){
-                return false;
-            }
-        }
-        return true;
-    }
-
 }

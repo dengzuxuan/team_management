@@ -58,17 +58,17 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
             int durationSum = 0;
 
             if (startYear == endYear) {
-                queryWrapper1.eq("student_no",userInfo.getStudentNo()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
+                queryWrapper1.eq("student_id",userInfo.getId()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
             }else if(startYear<endYear){
                 //跨年
                 //2022 23 - 2023 10
                 for (int i = startYear; i <= endYear ; i++) {
                     if(i==startYear){
-                        queryWrapper1.eq("student_no",userInfo.getStudentNo()).eq("year",i).ge("week",startWeek);
+                        queryWrapper1.eq("student_id",userInfo.getId()).eq("year",i).ge("week",startWeek);
                     }else if(i==endYear){
-                        queryWrapper1.or().eq("student_no",userInfo.getStudentNo()).eq("year",i).le("week",endWeek);
+                        queryWrapper1.or().eq("student_id",userInfo.getId()).eq("year",i).le("week",endWeek);
                     }else{
-                        queryWrapper1.or().eq("student_no",userInfo.getStudentNo()).eq("year",i);
+                        queryWrapper1.or().eq("student_id",userInfo.getId()).eq("year",i);
                     }
                 }
             }

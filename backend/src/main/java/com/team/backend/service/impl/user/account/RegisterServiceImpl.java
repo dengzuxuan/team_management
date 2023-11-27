@@ -81,7 +81,8 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     public Result registerSingleUser(UserType user,String adminNo){
-        String tel = "",email = "",cardno = "",no="",leaderno="";
+        String tel = "",email = "",cardno = "",no="";
+        Integer leaderid = null;
         TeamInfo findTeamInfo =null;
         if(user.getTeamNo()!=null){
             QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
@@ -89,7 +90,7 @@ public class RegisterServiceImpl implements RegisterService {
             findTeamInfo = teamInfoMapper.selectOne(queryWrapper);
             if(findTeamInfo!=null){
                 no=findTeamInfo.getNo();
-                leaderno=findTeamInfo.getLeaderNo();
+                leaderid=findTeamInfo.getLeaderId();
             }
         }
         String password = user.getStudentNo().substring(user.getStudentNo().length() - 6);
@@ -104,25 +105,26 @@ public class RegisterServiceImpl implements RegisterService {
         }
         String encodedPassword = passwordEncoder.encode(password);
         Date now = new Date();
-        User newuser = new User(null,no,leaderno,adminNo,user.getUsername(),encodedPassword,tel,email,MEMBERROLE,cardno,user.getStudentNo(),password,now,now);
+        User newuser = new User(null,no,leaderid,adminNo,user.getUsername(),encodedPassword,tel,email,MEMBERROLE,cardno,user.getStudentNo(),password,now,now);
 
         if(LEADERFLAG.equals(user.getRole())){
             newuser.setRole(LEADERROLE);
-            findTeamInfo.setLeaderNo(user.getStudentNo());
-            teamInfoMapper.updateById(findTeamInfo);
-            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("team_no",user.getTeamNo());
-            List<User> memberUsers = userMapper.selectList(queryWrapper);
-            for(User member:memberUsers){
-                member.setLeaderNo(user.getStudentNo());
-                userMapper.updateById(member);
-            }
         }else if(MEMBERFLAG.equals(user.getRole())){
             newuser.setRole(TEAMMEMBERROLE);
-            findTeamInfo.setLeaderNo(user.getStudentNo());
-            teamInfoMapper.updateById(findTeamInfo);
         }
         userMapper.insert(newuser);
+
+        if(LEADERFLAG.equals(user.getRole())){
+            findTeamInfo.setLeaderId(newuser.getId());
+            teamInfoMapper.updateById(findTeamInfo);
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("team_no",user.getTeamNo()).eq("role",TEAMMEMBERROLE);
+            List<User> memberUsers = userMapper.selectList(queryWrapper);
+            for(User member:memberUsers){
+                member.setLeaderId(newuser.getId());
+                userMapper.updateById(member);
+            }
+        }
         return Result.success(null);
     }
 }

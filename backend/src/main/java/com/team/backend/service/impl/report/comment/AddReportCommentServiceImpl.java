@@ -48,7 +48,7 @@ public class AddReportCommentServiceImpl implements AddReportCommentService {
         }
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("student_no",weeklyReport.getStudentNo());
+        queryWrapper.eq("id",weeklyReport.getStudentId());
         User reportUser = userMapper.selectOne(queryWrapper);
 
         if(user.getRole()==ADMINROLE){
@@ -58,7 +58,7 @@ public class AddReportCommentServiceImpl implements AddReportCommentService {
             }
         }else if(user.getRole()==LEADERROLE){
             roleGroup = 2;
-            if(!Objects.equals(reportUser.getLeaderNo(), user.getStudentNo())){
+            if(!Objects.equals(reportUser.getLeaderId(), user.getId())){
                 if(Objects.equals(user.getStudentNo(), reportUser.getStudentNo())){
                     roleGroup = 1;
                 }else{
@@ -74,7 +74,7 @@ public class AddReportCommentServiceImpl implements AddReportCommentService {
         ReportComment reportComment = new ReportComment(
                 null,
                 commentAddInfo.getReportId(),
-                user.getStudentNo(),
+                user.getId(),
                 roleGroup,
                 commentAddInfo.getContent(),
                 now,

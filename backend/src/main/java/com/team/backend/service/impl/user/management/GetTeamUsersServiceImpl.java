@@ -42,7 +42,7 @@ public class GetTeamUsersServiceImpl implements GetTeamUsersService {
             return Result.build(null,ResultCodeEnum.USER_ADMIN_WRONG);
         }
 
-        if("".equals(userFind.getLeaderNo()) && userFind.getRole()!=LEADERROLE){
+        if(userFind.getRole() == MEMBERROLE){
             m1.put("leader_infos",null);
             m1.put("member_infos",null);
             return Result.success(m1);
@@ -57,23 +57,16 @@ public class GetTeamUsersServiceImpl implements GetTeamUsersService {
             queryWrapperMember.select(
                     User.class,info->!info.getColumn().equals("password_real")
                             && !info.getColumn().equals("password")
-            ).eq("leader_no",StudentNo);
+            ).eq("leader_id",userFind.getLeaderId());
             m1.put("member_infos",userMapper.selectMaps(queryWrapperMember));
 
         }else if(userFind.getRole()==TEAMMEMBERROLE){
-            //组员
-            QueryWrapper<User> queryWrapperLeaderNo = new QueryWrapper<>();
-            queryWrapperLeaderNo.select(
-                    User.class,info->!info.getColumn().equals("password_real")
-                            && !info.getColumn().equals("password")
-            ).eq("student_no",StudentNo);
-            User memberUser = userMapper.selectOne(queryWrapperLeaderNo);
 
             QueryWrapper<User> queryWrapperMember = new QueryWrapper<>();
             queryWrapperMember.select(
                     User.class,info->!info.getColumn().equals("password_real")
                             && !info.getColumn().equals("password")
-            ).eq("leader_no",memberUser.getLeaderNo());
+            ).eq("leader_id",userFind.getLeaderId());
             m1.put("member_infos",userMapper.selectMaps(queryWrapperMember));
 
             //组长
@@ -81,7 +74,7 @@ public class GetTeamUsersServiceImpl implements GetTeamUsersService {
             queryWrapperLeader.select(
                     User.class,info->!info.getColumn().equals("password_real")
                             && !info.getColumn().equals("password")
-            ).eq("student_no",memberUser.getLeaderNo());
+            ).eq("student_id",userFind.getLeaderId());
             m1.put("leader_infos",userMapper.selectOne(queryWrapperLeader));
         }
 

@@ -40,7 +40,7 @@ public class UpdateUserReportServiceImpl implements UpdateUserReportService {
             return Result.build(null, ResultCodeEnum.REPORT_NOT_EXIST);
         }
 
-        if(!Objects.equals(user.getStudentNo(), weeklyReport.getStudentNo())){
+        if(!Objects.equals(user.getId(), weeklyReport.getStudentId())){
             return Result.build(null, ResultCodeEnum.USER_CANT_UPDATE_REPORT);
         }
 

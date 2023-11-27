@@ -62,11 +62,11 @@ public class GetTeamEquipmentServiceImpl implements GetTeamEquipmentService {
             getEquipmentInfoService.updateEquipmentAndRecord(equipment.getId());
 
             QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-            userQueryWrapper.select("student_no","username").eq("student_no",equipment.getRecipient());
+            userQueryWrapper.select("student_no","username").eq("id",equipment.getRecipient());
             User recipent =  userMapper.selectOne(userQueryWrapper);
 
             QueryWrapper<User> userQueryWrapper2 = new QueryWrapper<>();
-            userQueryWrapper2.select("student_no","username").eq("student_no",equipment.getFormerRecipient());
+            userQueryWrapper2.select("student_no","username").eq("id",equipment.getFormerRecipient());
             User formerRecipent =  userMapper.selectOne(userQueryWrapper2);
 
 

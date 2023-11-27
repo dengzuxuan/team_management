@@ -28,7 +28,9 @@ public class GetUserInfosServiceImpl implements GetUserInfosService {
 
     @Autowired
     WeeklyReportMapper weeklyReportMapper;
-
+    /*
+    * 获取组内/（团队内）所有用户
+    * */
     @Override
     public Result getUserInfos() {
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -63,13 +65,13 @@ public class GetUserInfosServiceImpl implements GetUserInfosService {
             if(user.getRole()==ADMINROLE){
 
                 QueryWrapper<WeeklyReport> queryWrapper1 = new QueryWrapper<>();
-                queryWrapper1.eq("student_no",userInfo.getStudentNo()).eq("admin_status",0);
+                queryWrapper1.eq("student_id",userInfo.getId()).eq("admin_status",0);
                 List<WeeklyReport> weeklyReportList = weeklyReportMapper.selectList(queryWrapper1);
                 notReadCnt = weeklyReportList.size();
             }else {
 
                 QueryWrapper<WeeklyReport> queryWrapper1 = new QueryWrapper<>();
-                queryWrapper1.eq("student_no",userInfo.getStudentNo()).eq("leader_status",0);
+                queryWrapper1.eq("student_id",userInfo.getId()).eq("leader_status",0);
                 List<WeeklyReport> weeklyReportList = weeklyReportMapper.selectList(queryWrapper1);
                 notReadCnt = weeklyReportList.size();
             }

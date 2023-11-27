@@ -25,25 +25,34 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
     TeamInfoMapper teamInfoMapper;
     @Autowired
     UserMapper userMapper;
-
+    /**
+     * 管理员获取到的信息是旗下所有组的信息 （管理员需要传入studentNO）
+     * 组长及组员获取到的信息是所在组的信息 （组长及组员不需要传入参数）
+     * **/
     @Override
     public Result getTeamInfo(String StudentNo) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
-
+        Integer userid = null;
         if(StudentNo==null){
             if(user.getRole()==LEADERROLE){ //组长
-                StudentNo = user.getStudentNo();
+                userid = user.getId();
             }else if(user.getRole()==TEAMMEMBERROLE){ //组员
-                StudentNo = user.getLeaderNo();
+                userid = user.getLeaderId();
             } else if(user.getRole()==ADMINROLE){
                 return Result.build(null,ResultCodeEnum.PARAMS_WRONG);
             }
+        }else{
+            QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("student_no",StudentNo);
+            User user1 = userMapper.selectOne(queryWrapper1);
         }
+
+
         QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("leader_no",StudentNo);
+        queryWrapper.eq("leader_id",userid);
         TeamInfo teamInfos = teamInfoMapper.selectOne(queryWrapper);
         return Result.success(teamInfos);
     }
@@ -56,31 +65,32 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
         User user = loginUser.getUser();
 
         ArrayList<Object> teamDeatilInfos = new ArrayList<>();
-        if(user.getRole() == ADMINROLE){//导师角色
+        if(user.getRole() == ADMINROLE){
             QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("admin_no",user.getStudentNo());
             List<TeamInfo> teamInfos = teamInfoMapper.selectList(queryWrapper);
 
             for(TeamInfo teamInfo : teamInfos){
+                User leaderUser = null;
                 Map<String,Object> teamDeatilInfo = new HashMap<>();
                 QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
                 queryWrapper1.select(
                         User.class,info->!info.getColumn().equals("password_real")
                         && !info.getColumn().equals("password")
-                ).eq("leader_no",teamInfo.getLeaderNo());
+                ).eq("leader_id",teamInfo.getLeaderId());
                 List<User> teamMembers = userMapper.selectList(queryWrapper1);
 
                 //加上组长
-                if(!Objects.equals(teamInfo.getLeaderNo(), "")){
+                if(teamInfo.getLeaderId()!=null){
                     QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
                     queryWrapper2.select(
                             User.class,info->!info.getColumn().equals("password_real")
                                     && !info.getColumn().equals("password")
-                    ).eq("student_no",teamInfo.getLeaderNo());
-                    User leaderUser = userMapper.selectOne(queryWrapper2);
-                    teamMembers.add(0,leaderUser);
+                    ).eq("id",teamInfo.getLeaderId());
+                    leaderUser = userMapper.selectOne(queryWrapper2);
                 }
                 teamDeatilInfo.put("members",teamMembers);
+                teamDeatilInfo.put("leader",leaderUser);
                 teamDeatilInfo.put("teamname",teamInfo.getTeamname());
                 teamDeatilInfo.put("no",teamInfo.getNo());
                 teamDeatilInfos.add(teamDeatilInfo);

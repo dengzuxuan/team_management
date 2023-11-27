@@ -15,7 +15,7 @@ public class ReportTeamWork {
     private Integer reportId;
     private String year;
     private String week;
-    private String studentNo;
+    private Integer studentId;
     private String content;
     private int duration;
     private String teamworkId;

@@ -29,7 +29,7 @@ public class GetListServiceImpl implements GetListService {
     private UserMapper userMapper;
 
     @Override
-    public Result getList(String range, int pageNum, int pageSize) {
+    public Result getList(int pageNum, int pageSize) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
@@ -43,66 +43,13 @@ public class GetListServiceImpl implements GetListService {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         Page<User> rowPage = new Page<>();
 
-        switch (range){
-            case "member":
-                queryWrapper.eq("admin_no",adminUser.getStudentNo()).eq("role",3).select(
-                        User.class,info->!info.getColumn().equals("password_real")
+        queryWrapper.eq("admin_no",adminUser.getStudentNo()).select(
+                User.class,info->!info.getColumn().equals("password_real")
                         && !info.getColumn().equals("password")
-                );
-                rowPage = userMapper.selectPage(page, queryWrapper);
-                break;
-            case "leader":
-                queryWrapper.eq("admin_no",adminUser.getStudentNo()).eq("role",2).select(
-                        User.class,info->!info.getColumn().equals("password_real")
-                                && !info.getColumn().equals("password")
-                );
-                rowPage = userMapper.selectPage(page, queryWrapper);
-                break;
-            case "all":
-                queryWrapper.eq("admin_no",adminUser.getStudentNo()).select(
-                        User.class,info->!info.getColumn().equals("password_real")
-                                && !info.getColumn().equals("password")
-                );
-                rowPage = userMapper.selectPage(page, queryWrapper);
-                break;
-            default:
-                return Result.build(null,ResultCodeEnum.INPUT_PARAM_WRONG);
-        }
+        ).orderBy(true,false,"id");
+        rowPage = userMapper.selectPage(page, queryWrapper);
 
-        List<ExtendUser> extendUserList = new ArrayList<>();
-
-        List<User> userList = rowPage.getRecords();
-        for(User userInfo:userList){
-            QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("student_no",userInfo.getAdminNo()).select(
-                    User.class,info->!info.getColumn().equals("password_real")
-                            && !info.getColumn().equals("password")
-            );
-            User adminInfo = userMapper.selectOne(queryWrapper1);
-
-            QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.eq("student_no",userInfo.getLeaderNo()).select(
-                    User.class,info->!info.getColumn().equals("password_real")
-                            && !info.getColumn().equals("password")
-            );
-            User leaderInfo = userMapper.selectOne(queryWrapper2);
-
-
-            ExtendUser extendUser = new ExtendUser(
-                    userInfo,
-                    leaderInfo,
-                    adminInfo
-            );
-
-            extendUserList.add(extendUser);
-        }
-
-        Map<String,Object> res = new HashMap<>();
-        res.put("userlist",extendUserList);
-        res.put("total",rowPage.getTotal());
-        res.put("size",rowPage.getSize());
-        res.put("current",rowPage.getCurrent());
-        return Result.success(res);
+        return Result.success(rowPage);
     }
     @Data
     @NoArgsConstructor

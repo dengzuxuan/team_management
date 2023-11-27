@@ -18,9 +18,8 @@ public class GetListController {
 
     @GetMapping("/v1/user/account/getlist/")
     public Result getList(@RequestParam Map<String,String> map){
-        String range = map.get("range");
         int pageNum = parseInt(map.get("pageNum")) ;
         int pageSize = parseInt(map.get("pageSize"));
-        return getListService.getList(range,pageNum,pageSize);
+        return getListService.getList(pageNum,pageSize);
     }
 }

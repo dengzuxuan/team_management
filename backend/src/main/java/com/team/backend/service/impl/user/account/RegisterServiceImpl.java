@@ -71,7 +71,7 @@ public class RegisterServiceImpl implements RegisterService {
                 failedCnt++;
                 continue;
             }
-            Result result = registerSingleUser(user, loginuser.getAdminNo());
+            Result result = registerSingleUser(user, loginuser.getStudentNo());
         }
         if (failedCnt == 0){
             return Result.success(null);
@@ -84,7 +84,7 @@ public class RegisterServiceImpl implements RegisterService {
         TeamInfo findTeamInfo =null;
         if(user.getTeamNo()!=null){
             QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("no",user.getTeamNo());
+            queryWrapper.eq("no",user.getTeamNo()).eq("admin_no",adminNo);
             findTeamInfo = teamInfoMapper.selectOne(queryWrapper);
             if(findTeamInfo!=null){
                 no=findTeamInfo.getNo();

@@ -15,7 +15,6 @@ public class UserTeamWorkInfo{
     private String studentNo;
     private int Role;
     private String name;
-    private String photo;
     private String teamNo;
     private String teamName;
     private int workTimes;

@@ -53,7 +53,7 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
         UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
         User user = loginUser.getUser();
 
-        ArrayList<Map<String,Object>> teamDeatilInfos = new ArrayList<>();
+        ArrayList<Object> teamDeatilInfos = new ArrayList<>();
         if(user.getRole() == 1){//导师角色
             QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("admin_no",user.getStudentNo());

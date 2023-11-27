@@ -86,7 +86,6 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
                     userInfo.getStudentNo(),
                     userInfo.getRole(),
                     userInfo.getUsername(),
-                    userInfo.getPhoto(),
                     userInfo.getTeamNo(),
                     teamName,
                     weeklyReportList.size()

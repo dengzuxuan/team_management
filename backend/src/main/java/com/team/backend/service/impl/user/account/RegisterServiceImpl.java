@@ -3,10 +3,14 @@ package com.team.backend.service.impl.user.account;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
+import com.team.backend.dto.req.RegisterUserType;
+import com.team.backend.mapper.TeamInfoMapper;
 import com.team.backend.mapper.UserMapper;
+import com.team.backend.pojo.TeamInfo;
 import com.team.backend.pojo.User;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.user.account.RegisterService;
+import com.team.backend.utils.common.excelType.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,45 +30,87 @@ import static java.lang.Integer.parseInt;
 public class RegisterServiceImpl implements RegisterService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private TeamInfoMapper teamInfoMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RegisterExcelServiceImpl registerExcelService;
 
     @Override
-    public Result register(String studentNo,String password,int role,String username) {
+    public Result register(UserType user) {
+        UsernamePasswordAuthenticationToken authentication =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
+        User loginuser = loginUser.getUser();
+        if(loginuser.getRole()!=1){
+            return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
+        }
+        ResultCodeEnum codeEnum = registerExcelService.checkUserInfoInput(user,loginuser.getStudentNo());
+        if(codeEnum!=ResultCodeEnum.SUCCESS){
+            return Result.build(null, codeEnum);
+        }
+        return registerSingleUser(user,loginuser.getStudentNo());
+    }
 
-        String adminNo = "";
-        if(username==null){
-            username=studentNo;
-        }
-        //23125205
-        if(studentNo==null){
-            return Result.build(null, ResultCodeEnum.USER_NAME_NOT_EMPTY);
-        }
-        if(password==null){
-            password = studentNo.substring(2);
-        }
-        if(role==0){
-            role=3;
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-            UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
-            User adminUser = loginUser.getUser();
-            adminNo = adminUser.getStudentNo();
-        }
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("student_no",studentNo);
-        List<User> users = userMapper.selectList(queryWrapper);
-
-        if(!users.isEmpty()){
-            return Result.build(null, ResultCodeEnum.USER_NAME_ALREADY_EXIST);
+    @Override
+    public Result registermore(UserType[] users) {
+        UsernamePasswordAuthenticationToken authentication =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
+        User loginuser = loginUser.getUser();
+        if(loginuser.getRole()!=1){
+            return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
+        int failedCnt = 0;
+        for (UserType user :users) {
+            ResultCodeEnum codeEnum = registerExcelService.checkUserInfoInput(user,loginuser.getStudentNo());
+            if(codeEnum!=ResultCodeEnum.SUCCESS){
+                failedCnt++;
+                continue;
+            }
+            Result result = registerSingleUser(user, loginuser.getAdminNo());
+        }
+        if (failedCnt == 0){
+            return Result.success(null);
+        }
+        return Result.success("共有"+failedCnt+"个用户新建失败");
+    }
+
+    public Result registerSingleUser(UserType user,String adminNo){
+        String tel = "",email = "",cardno = "",no="",leaderno="";
+        TeamInfo findTeamInfo =null;
+        if(user.getTeamNo()!=null){
+            QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("no",user.getTeamNo());
+            findTeamInfo = teamInfoMapper.selectOne(queryWrapper);
+            if(findTeamInfo!=null){
+                no=findTeamInfo.getNo();
+                leaderno=findTeamInfo.getLeaderNo();
+            }
+        }
+        String password = user.getStudentNo().substring(user.getStudentNo().length() - 6);
+        if(user.getTel()!=null){
+            tel=user.getTel();
+        }
+        if(user.getEmail()!=null){
+            email=user.getEmail();
+        }
+        if(user.getCardNo()!=null){
+            cardno=user.getCardNo();
+        }
         String encodedPassword = passwordEncoder.encode(password);
-        String defaultPhoto = "http://team-manager.oss-cn-beijing.aliyuncs.com/avatar/default.png";
         Date now = new Date();
-        User user = new User(null,null,adminNo,username,encodedPassword,null,null,null,role,defaultPhoto,studentNo,password,now,now);
-        userMapper.insert(user);
+        User newuser = new User(null,no,leaderno,adminNo,user.getUsername(),encodedPassword,tel,email,3,cardno,user.getStudentNo(),password,now,now);
+
+        if("组长".equals(user.getRole())){
+            newuser.setRole(2);
+            findTeamInfo.setLeaderNo(user.getStudentNo());
+            teamInfoMapper.updateById(findTeamInfo);
+        }
+        userMapper.insert(newuser);
         return Result.success(null);
     }
 }

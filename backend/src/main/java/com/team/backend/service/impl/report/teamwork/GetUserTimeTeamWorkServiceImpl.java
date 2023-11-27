@@ -94,7 +94,6 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
                     userInfo.getStudentNo(),
                     userInfo.getRole(),
                     userInfo.getUsername(),
-                    userInfo.getPhoto(),
                     teamInfo.getNo(),
                     teamInfo.getTeamname(),
                     reportTeamWorkList.size(),

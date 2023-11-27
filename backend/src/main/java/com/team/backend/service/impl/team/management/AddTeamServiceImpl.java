@@ -45,7 +45,7 @@ public class AddTeamServiceImpl implements AddTeamService {
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
-        ResultCodeEnum codeEnum = checkTeamInfo(teamInfo.getNo(), teamInfo.getTeamName());
+        ResultCodeEnum codeEnum = checkTeamInfo(teamInfo.getNo(), teamInfo.getTeamName(),adminUser.getStudentNo());
         if( codeEnum!= ResultCodeEnum.SUCCESS){
             return Result.build(null,codeEnum);
         }
@@ -131,7 +131,7 @@ public class AddTeamServiceImpl implements AddTeamService {
                         continue;
                     }
 
-                    ResultCodeEnum codeEnum = checkTeamInfo(data.getNo(),data.getTypename());
+                    ResultCodeEnum codeEnum = checkTeamInfo(data.getNo(),data.getTypename(),adminUser.getStudentNo());
                     if(codeEnum == ResultCodeEnum.SUCCESS){
                         correctTeams.add(teamExcelInfo);
                         teamNoSet.add(data.getNo());
@@ -158,7 +158,7 @@ public class AddTeamServiceImpl implements AddTeamService {
         return Result.success(res);
     }
 
-    private ResultCodeEnum checkTeamInfo(String no,String typename){
+    private ResultCodeEnum checkTeamInfo(String no,String typename,String studentno){
         if(no == null){
             return ResultCodeEnum.TEAM_NO_NOT_EMPTY;
         }
@@ -177,14 +177,14 @@ public class AddTeamServiceImpl implements AddTeamService {
         }
 
         QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("no",no);
+        queryWrapper.eq("no",no).eq("admin_no",studentno);
         TeamInfo teamInfoNoFind = teamInfoMapper.selectOne(queryWrapper);
         if(teamInfoNoFind!=null){
             return ResultCodeEnum.TEAM_NO_ALRADY_EXIST;
         }
 
         QueryWrapper<TeamInfo> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.eq("teamname",typename);
+        queryWrapper2.eq("teamname",typename).eq("admin_no",studentno);
         TeamInfo teamInfoNameFind = teamInfoMapper.selectOne(queryWrapper2);
         if(teamInfoNameFind!=null){
             return ResultCodeEnum.TEAM_NAME_ALRADY_EXIST;

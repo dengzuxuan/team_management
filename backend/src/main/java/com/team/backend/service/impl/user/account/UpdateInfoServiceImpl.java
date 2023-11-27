@@ -35,12 +35,12 @@ public class UpdateInfoServiceImpl implements UpdateInfoService {
     private WeeklyReportMapper weeklyReportMapper;
 
     @Override
-    public Result updateInfo(String email, String photo, String phone,String username) {
+    public Result updateInfo(String email, String cardno, String phone,String username) {
         String phoneRegex = "^[1][3,4,5,7,8][0-9]{9}$";
         Pattern phonePatten = Pattern.compile(phoneRegex);
         Matcher phoneMatcher = phonePatten.matcher(phone);
         if(!phone.equals("") && !phoneMatcher.matches()){
-            return Result.build(null, ResultCodeEnum.INPUT_PHONE_PARAM_WRONG);
+            return Result.build(null, ResultCodeEnum.INPUT_TEL_PARAM_WRONG);
         }
 
 
@@ -56,7 +56,7 @@ public class UpdateInfoServiceImpl implements UpdateInfoService {
         User user =  loginUser.getUser();
 
         user.setEmail(email);
-        user.setPhoto(photo);
+        user.setCardNo(cardno);
         user.setPhone(phone);
         user.setUsername(username);
 

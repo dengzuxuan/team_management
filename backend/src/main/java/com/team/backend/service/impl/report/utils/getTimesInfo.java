@@ -48,7 +48,7 @@ public class getTimesInfo {
                 queryWrapper.eq("student_no",No);
             }else{
                 //如果传入学号为空的话 即查询所有的学生
-                queryWrapper.eq("leader_no",user.getStudentNo());
+                queryWrapper.eq("leader_id",user.getLeaderId());
             }
             userList = userMapper.selectList(queryWrapper);
         }

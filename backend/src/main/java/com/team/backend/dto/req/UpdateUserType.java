@@ -1,5 +1,6 @@
 package com.team.backend.dto.req;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.*;
 
 /**
@@ -15,8 +16,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateUserType {
-        private String photo;
-        private String email;
-        private String phone;
+        private int id;
         private String username;
+        private String studentNo;
+        private String tel;
+        private String email;
+        private String cardNo;
+        private String teamNo;
+        private String teamName;
+        private String Role;
 }

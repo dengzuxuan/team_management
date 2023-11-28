@@ -58,6 +58,50 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
     }
 
     @Override
+    public Result getTeamInfoSimple() {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
+        User user = loginUser.getUser();
+
+        ArrayList<Map<String,Object>> teamDeatilInfos = new ArrayList<>();
+        if(user.getRole() == 1){//导师角色
+            QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("admin_no",user.getStudentNo());
+            List<TeamInfo> teamInfos = teamInfoMapper.selectList(queryWrapper);
+
+            for(TeamInfo teamInfo : teamInfos){
+                //组员
+                Map<String,Object> teamDeatilInfo = new HashMap<>();
+                QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
+                queryWrapper1.select(
+                        User.class,info->!info.getColumn().equals("password_real")
+                                && !info.getColumn().equals("password")
+                ).eq("leader_id",teamInfo.getLeaderId());
+                List<User> teamMembers = userMapper.selectList(queryWrapper1);
+
+                //加上组长
+                if(!Objects.equals(teamInfo.getLeaderId(), null)){
+                    QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
+                    queryWrapper2.select(
+                            User.class,info->!info.getColumn().equals("password_real")
+                                    && !info.getColumn().equals("password")
+                    ).eq("id",teamInfo.getLeaderId());
+                    User leaderUser = userMapper.selectOne(queryWrapper2);
+                    teamMembers.add(0,leaderUser);
+                }
+                teamDeatilInfo.put("members",teamMembers);
+                teamDeatilInfo.put("teamname",teamInfo.getTeamname());
+                teamDeatilInfo.put("no",teamInfo.getNo());
+                teamDeatilInfos.add(teamDeatilInfo);
+            }
+        }else {
+            return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
+        }
+        return Result.success(teamDeatilInfos);
+    }
+
+    @Override
     public Result getTeamDetail() {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();

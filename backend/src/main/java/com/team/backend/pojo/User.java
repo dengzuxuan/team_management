@@ -1,5 +1,6 @@
 package com.team.backend.pojo;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -18,16 +19,21 @@ import java.util.Date;
 public class User implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String teamNo;
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Integer leaderId;
     private String adminNo;
     private String username;
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private String password;
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String phone;
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String email;
     private int role;
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String cardNo;
     private String studentNo;
 

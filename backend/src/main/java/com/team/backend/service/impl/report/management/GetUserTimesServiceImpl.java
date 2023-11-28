@@ -43,7 +43,7 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
-        if (user.getRole() != ADMINROLE && user.getRole() != LEADERROLE) {
+        if (user.getRole() != ADMINROLE) {
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
 
@@ -58,17 +58,17 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
             int endWeek = getReportInfo.getEndTimeInfo().getWeek();
 
             if (startYear == endYear) {
-                queryWrapper1.eq("student_no", userInfo.getStudentNo()).eq("year", startYear).ge("week", startWeek).le("week", endWeek);
+                queryWrapper1.eq("student_id", userInfo.getId()).eq("year", startYear).ge("week", startWeek).le("week", endWeek);
             } else if (startYear < endYear) {
                 //跨年
                 //eg:2022 23 - 2023 10
                 for (int i = startYear; i <= endYear; i++) {
                     if (i == startYear) {
-                        queryWrapper1.eq("student_no", userInfo.getStudentNo()).eq("year", i).ge("week", startWeek);
+                        queryWrapper1.eq("student_id", userInfo.getId()).eq("year", i).ge("week", startWeek);
                     } else if (i == endYear) {
-                        queryWrapper1.or().eq("student_no", userInfo.getStudentNo()).eq("year", i).le("week", endWeek);
+                        queryWrapper1.or().eq("student_id", userInfo.getId()).eq("year", i).le("week", endWeek);
                     } else {
-                        queryWrapper1.or().eq("student_no", userInfo.getStudentNo()).eq("year", i);
+                        queryWrapper1.or().eq("student_id", userInfo.getId()).eq("year", i);
                     }
                 }
             }
@@ -78,7 +78,7 @@ public class GetUserTimesServiceImpl implements GetUserTimesService {
 
             String teamName = null;
             QueryWrapper<TeamInfo> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.eq("no", userInfo.getTeamNo());
+            queryWrapper2.eq("no", userInfo.getTeamNo()).eq("admin_no",user.getStudentNo());
             TeamInfo teamInfoFind = teamInfoMapper.selectOne(queryWrapper2);
             if (teamInfoFind != null) {
                 teamName = teamInfoFind.getTeamname();

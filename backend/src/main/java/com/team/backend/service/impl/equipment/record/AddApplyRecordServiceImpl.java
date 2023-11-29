@@ -52,7 +52,7 @@ public class AddApplyRecordServiceImpl implements AddApplyRecordService {
 
         QueryWrapper<EquipmentRecord> equipmentRecordQueryWrapper = new QueryWrapper<>();
         //正在申请的设备无法重复申请
-        equipmentRecordQueryWrapper.eq("equipment_id",record.getEquipmentId()).eq("student_no",user.getStudentNo()).eq("status",2);
+        equipmentRecordQueryWrapper.eq("equipment_id",record.getEquipmentId()).eq("student_id",user.getId()).eq("status",2);
         EquipmentRecord equipmentRecord = equipmentRecordMapper.selectOne(equipmentRecordQueryWrapper);
         if(equipmentRecord!=null){
             return Result.build(null, ResultCodeEnum.EQUIPMENT_ERCORD_NOT_REPEAT);

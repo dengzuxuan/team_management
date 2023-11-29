@@ -33,7 +33,7 @@ public class AddWeeklyReportServiceImpl implements AddWeeklyReportService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
         QueryWrapper<WeeklyReport> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("student_no",user.getStudentNo()).eq("time",reportInfo.getTime());
+        queryWrapper.eq("student_id",user.getId()).eq("time",reportInfo.getTime());
         WeeklyReport weeklyReportFind = weeklyReportMapper.selectOne(queryWrapper);
         int teamworkDuration = 0;
         Date now = new Date();

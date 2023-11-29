@@ -35,7 +35,7 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
         QueryWrapper<WeeklyReport> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("student_no",user.getStudentNo());
+        queryWrapper.eq("student_id",user.getId());
 
         Map<String,Object> res = getReportPage(pageNum,pageSize,queryWrapper);
 

@@ -2,7 +2,9 @@ package com.team.backend.service.impl.report.management;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.team.backend.config.result.Result;
+import com.team.backend.mapper.UserMapper;
 import com.team.backend.mapper.WeeklyReportMapper;
+import com.team.backend.pojo.User;
 import com.team.backend.pojo.WeeklyReport;
 import com.team.backend.service.report.management.GetUserTeamWorkService;
 import com.team.backend.utils.JsonUtil;
@@ -19,6 +21,8 @@ import java.util.Map;
 public class GetUserTeamWorkServiceImpl implements GetUserTeamWorkService {
     @Autowired
     GetWeeklyReportServiceImpl getWeeklyReportService;
+    @Autowired
+    UserMapper userMapper;
 
     @Autowired
     WeeklyReportMapper weeklyReportMapper;
@@ -30,20 +34,23 @@ public class GetUserTeamWorkServiceImpl implements GetUserTeamWorkService {
         int startWeek = getReportInfo.getStartTimeInfo().getWeek();
         int endWeek = getReportInfo.getEndTimeInfo().getWeek();
 
+        QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("student_no",getReportInfo.getStudentNo());
+        User userFind = userMapper.selectOne(queryWrapper1);
         QueryWrapper<WeeklyReport> queryWrapper = new QueryWrapper<>();
 
         if (startYear == endYear) {
-            queryWrapper.eq("student_no",getReportInfo.getStudentNo()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
+            queryWrapper.eq("student_id",userFind.getId()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
         }else if(startYear<endYear){
             //跨年
             //2022 23 - 2023 10
             for (int i = startYear; i <= endYear ; i++) {
                 if(i==startYear){
-                    queryWrapper.eq("student_no",getReportInfo.getStudentNo()).eq("year",i).ge("week",startWeek);
+                    queryWrapper.eq("student_id",userFind.getId()).eq("year",i).ge("week",startWeek);
                 }else if(i==endYear){
-                    queryWrapper.or().eq("student_no",getReportInfo.getStudentNo()).eq("year",i).le("week",endWeek);
+                    queryWrapper.or().eq("student_id",userFind.getId()).eq("year",i).le("week",endWeek);
                 }else{
-                    queryWrapper.or().eq("student_no",getReportInfo.getStudentNo()).eq("year",i);
+                    queryWrapper.or().eq("student_id",userFind.getId()).eq("year",i);
                 }
             }
         }

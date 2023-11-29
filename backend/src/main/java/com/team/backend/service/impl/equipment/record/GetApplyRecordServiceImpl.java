@@ -36,7 +36,7 @@ public class GetApplyRecordServiceImpl implements GetApplyRecordService {
         User user = loginUser.getUser();
 
         QueryWrapper<EquipmentRecord> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("student_no",user.getStudentNo());
+        queryWrapper.eq("student_id",user.getId());
         List<EquipmentRecord> equipmentRecordList = equipmentRecordMapper.selectList(queryWrapper);
 
         for (EquipmentRecord record:equipmentRecordList) {

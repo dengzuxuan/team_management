@@ -41,9 +41,18 @@ public class LoginServiceImpl implements LoginService {
             return Result.build(map, ResultCodeEnum.USER_PASSWORD_WRONG);
         }
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userCheck.getUsername(),password);
-        Authentication authenicate = authenticationManager.authenticate(authenticationToken);//登录失败会自动处理
-        UserDetailsImpl loginUser = (UserDetailsImpl) authenicate.getPrincipal();
+                new UsernamePasswordAuthenticationToken(userCheck.getStudentNo(),password);
+
+        UserDetailsImpl loginUser = null;
+        try {
+            // 可能会抛出异常的代码块
+            Authentication authenicate = authenticationManager.authenticate(authenticationToken);//登录失败会自动处理
+            loginUser = (UserDetailsImpl) authenicate.getPrincipal();
+        } catch (Exception e) {
+            // 捕获并处理异常
+            return Result.build(e.getMessage(),ResultCodeEnum.USER_LOGIN_WRONG);
+        }
+
 
         User user = loginUser.getUser();
         String jwt = JwtUtil.createJWT(user.getId().toString());

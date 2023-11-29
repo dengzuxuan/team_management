@@ -17,9 +17,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String studentNo) throws UsernameNotFoundException {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username",username);
+        queryWrapper.eq("student_no",studentNo);
         User user = userMapper.selectOne(queryWrapper);
         if(user==null){
             throw new RuntimeException("用户不存在");

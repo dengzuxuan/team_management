@@ -89,16 +89,23 @@ public class GetUserTimeTeamWorkServiceImpl implements GetUserTimeTeamWorkServic
             }
 
             QueryWrapper<TeamInfo> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("no",userInfo.getTeamNo());
+            queryWrapper.eq("no",userInfo.getTeamNo()).eq("admin_no",user.getStudentNo());
+
             TeamInfo teamInfo = teamInfoMapper.selectOne(queryWrapper);
+            String teamNo = null;
+            String teamName = null;
+            if(teamInfo!=null){
+                teamNo = teamInfo.getNo();
+                teamName = teamInfo.getTeamname();
+            }
 
             UserTeamWorkInfo userTeamWorkInfo = new UserTeamWorkInfo(
                     userInfo.getId(),
                     userInfo.getStudentNo(),
                     userInfo.getRole(),
                     userInfo.getUsername(),
-                    teamInfo.getNo(),
-                    teamInfo.getTeamname(),
+                    teamNo,
+                    teamName,
                     reportTeamWorkList.size(),
                     durationSum,
                     reportTeamWorkList

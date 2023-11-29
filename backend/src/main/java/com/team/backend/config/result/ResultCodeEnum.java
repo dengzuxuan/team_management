@@ -11,6 +11,7 @@ public enum ResultCodeEnum {
     SUCCESS(200,"成功"),
     FAIL(201, "失败"),
 
+    USER_LOGIN_WRONG(2000,"用户登陆异常"),
     USER_NOT_EXIST(2001,"用户不存在"),
 
     USER_PASSWORD_WRONG(2002,"用户密码错误"),

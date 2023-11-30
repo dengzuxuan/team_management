@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.team.backend.utils.common.consts.roleConst.ADMINROLE;
+import static com.team.backend.utils.common.consts.roleConst.LEADERROLE;
+
 @Service
 public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
     @Autowired
@@ -28,6 +31,7 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
     @Autowired
     ReportCommentMapper reportCommentMapper;
 
+    //获取全部周报
     @Override
     public Result getWeeklyReport(int pageNum, int pageSize) {
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -56,12 +60,21 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
 
         for (WeeklyReport report:weeklyReportList){
             QueryWrapper<ReportComment> queryWrapperLeader = new QueryWrapper<>();
-            queryWrapperLeader.eq("report_id",report.getId()).eq("role",2).ne("student_id",report.getStudentId());
+            queryWrapperLeader.eq("report_id",report.getId()).eq("role",LEADERROLE).ne("student_id",report.getStudentId());
             List<ReportComment> reportLeaderComment = reportCommentMapper.selectList(queryWrapperLeader);
 
             QueryWrapper<ReportComment> queryWrapperAdmin = new QueryWrapper<>();
-            queryWrapperAdmin.eq("report_id",report.getId()).eq("role",1).ne("student_id",report.getStudentId());
+            queryWrapperAdmin.eq("report_id",report.getId()).eq("role",ADMINROLE).ne("student_id",report.getStudentId());
             List<ReportComment> reportAdminComment = reportCommentMapper.selectList(queryWrapperAdmin);
+
+            Calendar calendar = Calendar.getInstance();
+            String currentYear = String.valueOf(calendar.get(Calendar.YEAR));
+            String currentWeek = String.valueOf(calendar.get(Calendar.WEEK_OF_YEAR));
+
+            boolean isChangeFlag = false;
+            if((currentYear.equals(report.getYear())&&currentWeek.equals(report.getWeek()))){
+                isChangeFlag=true;
+            }
             WeeklyReportType weeklyReportType = new WeeklyReportType(
                     report.getId(),
                     report.getTime(),
@@ -75,6 +88,7 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
                     report.getLeaderStatus(),
                     reportAdminComment.size(),
                     reportLeaderComment.size(),
+                    isChangeFlag,
                     report.getCreateTime(),
                     report.getUpdateTime()
             );

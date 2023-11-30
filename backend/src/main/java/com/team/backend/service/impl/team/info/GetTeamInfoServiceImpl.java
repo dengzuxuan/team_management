@@ -58,6 +58,24 @@ public class GetTeamInfoServiceImpl implements GetTeamInfoService {
     }
 
     @Override
+    public Result getMemberInfo() {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl)authenticationToken.getPrincipal();
+        User user = loginUser.getUser();
+        if(user.getRole()!=LEADERROLE){
+            return Result.build(null,ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("leader_id",user.getId()).select(
+                User.class,info->!info.getColumn().equals("password_real")
+                        && !info.getColumn().equals("password")
+        );
+        List<User> memberUsers = userMapper.selectList(queryWrapper);
+        return Result.success(memberUsers);
+    }
+
+    @Override
     public Result getTeamInfoSimple() {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();

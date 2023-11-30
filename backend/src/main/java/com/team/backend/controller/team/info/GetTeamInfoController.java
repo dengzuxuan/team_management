@@ -26,6 +26,11 @@ public class GetTeamInfoController {
         return getTeamInfoService.getTeamInfo(StudentNo);
     }
 
+    @GetMapping(value = "/v1/team/info/getmemberinfos/")
+    public Result getTeamMemberInfo(){ ;
+        return getTeamInfoService.getMemberInfo();
+    }
+
 
     @GetMapping(value = "/v1/team/info/getteaminfo/")
     public Result getTeamInfo(){

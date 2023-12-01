@@ -7,7 +7,7 @@ import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.mapper.EquipmentMapper;
 import com.team.backend.pojo.Equipment;
 import com.team.backend.service.equipment.management.UpdateEquipmentService;
-import com.team.backend.dto.req.equipmentType;
+import com.team.backend.dto.excel.equipmentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

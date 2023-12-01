@@ -1,7 +1,7 @@
 package com.team.backend.utils;
 
 import com.team.backend.pojo.ReportTeamWork;
-import com.team.backend.dto.req.WeeklyReportType;
+import com.team.backend.dto.resp.WeeklyReportType;
 
 import java.util.Comparator;
 import java.util.Objects;

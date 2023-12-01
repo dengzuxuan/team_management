@@ -12,7 +12,7 @@ import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.report.management.GetWeeklyReportService;
 import com.team.backend.utils.JsonUtil;
 import com.team.backend.utils.ReportSortUtil;
-import com.team.backend.dto.req.WeeklyReportType;
+import com.team.backend.dto.resp.WeeklyReportType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -66,15 +66,6 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
             QueryWrapper<ReportComment> queryWrapperAdmin = new QueryWrapper<>();
             queryWrapperAdmin.eq("report_id",report.getId()).eq("role",ADMINROLE).ne("student_id",report.getStudentId());
             List<ReportComment> reportAdminComment = reportCommentMapper.selectList(queryWrapperAdmin);
-
-            Calendar calendar = Calendar.getInstance();
-            String currentYear = String.valueOf(calendar.get(Calendar.YEAR));
-            String currentWeek = String.valueOf(calendar.get(Calendar.WEEK_OF_YEAR));
-
-            boolean isChangeFlag = false;
-            if((currentYear.equals(report.getYear())&&currentWeek.equals(report.getWeek()))){
-                isChangeFlag=true;
-            }
             WeeklyReportType weeklyReportType = new WeeklyReportType(
                     report.getId(),
                     report.getTime(),
@@ -88,7 +79,6 @@ public class GetWeeklyReportServiceImpl implements GetWeeklyReportService {
                     report.getLeaderStatus(),
                     reportAdminComment.size(),
                     reportLeaderComment.size(),
-                    isChangeFlag,
                     report.getCreateTime(),
                     report.getUpdateTime()
             );

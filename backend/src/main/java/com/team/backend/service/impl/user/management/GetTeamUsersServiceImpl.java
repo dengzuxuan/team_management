@@ -74,7 +74,7 @@ public class GetTeamUsersServiceImpl implements GetTeamUsersService {
             queryWrapperLeader.select(
                     User.class,info->!info.getColumn().equals("password_real")
                             && !info.getColumn().equals("password")
-            ).eq("student_id",userFind.getLeaderId());
+            ).eq("id",userFind.getLeaderId());
             m1.put("leader_infos",userMapper.selectOne(queryWrapperLeader));
         }
 

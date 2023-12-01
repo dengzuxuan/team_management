@@ -3,8 +3,6 @@ package com.team.backend.service.impl.report.management;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.dto.req.UpdateReportType;
-import com.team.backend.dto.req.WeeklyReportType;
-import com.team.backend.mapper.UserMapper;
 import com.team.backend.mapper.WeeklyReportMapper;
 import com.team.backend.pojo.User;
 import com.team.backend.pojo.WeeklyReport;

@@ -1,4 +1,4 @@
-package com.team.backend.dto.req;
+package com.team.backend.dto.excel;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;

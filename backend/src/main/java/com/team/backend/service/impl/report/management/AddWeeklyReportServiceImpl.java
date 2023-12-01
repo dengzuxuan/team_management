@@ -2,6 +2,8 @@ package com.team.backend.service.impl.report.management;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.team.backend.config.result.Result;
+import com.team.backend.config.result.ResultCodeEnum;
+import com.team.backend.dto.req.ChangeWeeklyReportType;
 import com.team.backend.mapper.WeeklyReportMapper;
 import com.team.backend.pojo.User;
 import com.team.backend.pojo.WeeklyReport;
@@ -10,7 +12,7 @@ import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.service.report.management.AddWeeklyReportService;
 import com.team.backend.utils.JsonUtil;
 import com.team.backend.dto.req.TeamWorks;
-import com.team.backend.dto.req.WeeklyReportType;
+import com.team.backend.dto.resp.WeeklyReportType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,11 +29,12 @@ public class AddWeeklyReportServiceImpl implements AddWeeklyReportService {
     ManageTeamWorkServiceImpl manageTeamWorkService;
 
     @Override
-    public Result addWeeklyReport(WeeklyReportType reportInfo) {
+    public Result addWeeklyReport(ChangeWeeklyReportType reportInfo) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
+
         QueryWrapper<WeeklyReport> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("student_id",user.getId()).eq("time",reportInfo.getTime());
         WeeklyReport weeklyReportFind = weeklyReportMapper.selectOne(queryWrapper);
@@ -62,11 +65,14 @@ public class AddWeeklyReportServiceImpl implements AddWeeklyReportService {
             weeklyReport.setCreateTime(now);
             weeklyReport.setUpdateTime(now);
             weeklyReportMapper.insert(weeklyReport);
-        }else{
+        }else if(!reportInfo.getCreateFlag()){
             //更新周报
             weeklyReport.setId(weeklyReportFind.getId());
             weeklyReport.setUpdateTime(now);
             weeklyReportMapper.updateById(weeklyReport);
+        }else{
+            //原先新建的周报既不为空 又不是更新操作
+            return Result.build(null, ResultCodeEnum.REPORT_CANT_UPDATE_HERE);
         }
 
         reportInfo.setId(weeklyReport.getId());

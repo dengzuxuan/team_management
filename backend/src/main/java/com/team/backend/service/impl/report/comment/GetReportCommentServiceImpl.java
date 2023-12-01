@@ -75,7 +75,7 @@ public class GetReportCommentServiceImpl implements GetReportCommentService {
             queryWrapper2.select(
                     User.class,info->!info.getColumn().equals("password_real")
                             && !info.getColumn().equals("password")
-            ).eq("student_id",reportComment.getStudentId());
+            ).eq("id",reportComment.getStudentId());
             User user = userMapper.selectOne(queryWrapper2);
 
             int isMyself = 0;

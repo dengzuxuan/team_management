@@ -9,7 +9,7 @@ import com.team.backend.pojo.Equipment;
 import com.team.backend.pojo.User;
 import com.team.backend.service.equipment.management.ExportEquipmentExcelService;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
-import com.team.backend.dto.req.equipmentType;
+import com.team.backend.dto.excel.equipmentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -49,7 +49,7 @@ public class ExportEquipmentExcelServiceImpl implements ExportEquipmentExcelServ
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
-        headers.setContentDispositionFormData("attachment", "products.xlsx");
+        headers.setContentDispositionFormData("attachment", "users.xlsx");
 
         file.delete();
         return Result.success(ResponseEntity.ok().headers(headers).contentLength(bytes.length)

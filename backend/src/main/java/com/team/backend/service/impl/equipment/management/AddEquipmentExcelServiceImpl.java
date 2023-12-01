@@ -7,7 +7,7 @@ import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.service.equipment.management.AddEquipmentExcelService;
 import com.team.backend.service.equipment.management.AddEquipmentService;
-import com.team.backend.dto.req.equipmentType;
+import com.team.backend.dto.excel.equipmentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

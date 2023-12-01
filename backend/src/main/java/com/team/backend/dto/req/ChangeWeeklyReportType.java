@@ -6,13 +6,15 @@ import lombok.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
 @Getter
 @Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class WeeklyReportType implements Serializable {
+public class ChangeWeeklyReportType implements Serializable {
     private Integer id;
+    private Boolean createFlag;
     private String time;
     private String year;
     private String month;
@@ -20,14 +22,5 @@ public class WeeklyReportType implements Serializable {
     private WeekProgressType weekProgress;
     private WeekPlanType weekPlan;
     private List<TeamWorks> teamWorks;
-    private Integer adminStatus;
-    private Integer leaderStatus;
-    private Integer adminComment;
-    private Integer leaderComment;
-    private boolean isChangeFlag;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-    private Date createTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-    private Date updateTime;
 }
 

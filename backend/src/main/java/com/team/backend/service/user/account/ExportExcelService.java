@@ -3,6 +3,9 @@ package com.team.backend.service.user.account;
 import com.team.backend.config.result.Result;
 import com.team.backend.utils.common.excelType.UserType;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 /**
  * @ClassName ExportExcelService
  * @Description TODO
@@ -11,5 +14,5 @@ import com.team.backend.utils.common.excelType.UserType;
  * @Version 1.0
  */
 public interface ExportExcelService {
-    Result registermore(UserType[] users);
+    Result exportExcel() throws IOException;
 }

@@ -3,6 +3,7 @@ package com.team.backend.service.impl.report.teamwork;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.team.backend.config.result.Result;
+import com.team.backend.dto.req.ChangeWeeklyReportType;
 import com.team.backend.mapper.ReportTeamWorkMapper;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.ReportTeamWork;
@@ -13,7 +14,7 @@ import com.team.backend.utils.JsonUtil;
 import com.team.backend.utils.ReportSortUtil;
 import com.team.backend.dto.req.TeamWorks;
 import com.team.backend.dto.req.WeeklyGetReportType;
-import com.team.backend.dto.req.WeeklyReportType;
+import com.team.backend.dto.resp.WeeklyReportType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +30,7 @@ public class ManageTeamWorkServiceImpl implements ManageTeamWorkService {
     UserMapper userMapper;
 
     @Override
-    public void addTeamWork(WeeklyReportType reportInfo) {
+    public void addTeamWork(ChangeWeeklyReportType reportInfo) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
@@ -57,7 +58,7 @@ public class ManageTeamWorkServiceImpl implements ManageTeamWorkService {
     }
 
     @Override
-    public void updateTeamWork(WeeklyReportType reportInfo) {
+    public void updateTeamWork(ChangeWeeklyReportType reportInfo) {
 
     }
 

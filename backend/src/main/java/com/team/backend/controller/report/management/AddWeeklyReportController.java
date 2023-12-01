@@ -1,8 +1,9 @@
 package com.team.backend.controller.report.management;
 
 import com.team.backend.config.result.Result;
+import com.team.backend.dto.req.ChangeWeeklyReportType;
 import com.team.backend.service.report.management.AddWeeklyReportService;
-import com.team.backend.dto.req.WeeklyReportType;
+import com.team.backend.dto.resp.WeeklyReportType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +15,7 @@ public class AddWeeklyReportController {
     AddWeeklyReportService addWeeklyReportService;
 
     @PostMapping(value = "/v1/report/management/addweeklyreport/",consumes="application/json")
-    public Result addWeeklyReport(@RequestBody WeeklyReportType reportInfo){
+    public Result addWeeklyReport(@RequestBody ChangeWeeklyReportType reportInfo){
         return addWeeklyReportService.addWeeklyReport(reportInfo);
     }
 }

@@ -39,6 +39,9 @@ public enum ResultCodeEnum {
     TEAM_NO_ALRADY_EXIST(2022,"小组编号已存在"),
     TEAM_NAME_ALRADY_EXIST_BEFORE(2023,"当前excel中已存在该小组名称"),
     TEAM_NO_ALRADY_EXIST_BEFORE(2024,"当前excel中已存在该小组编号"),
+
+    USER_EXPORY_WRONG(2025,"用户信息导出失败"),
+
     INPUT_PARAM_WRONG(2101,"输入参数有误"),
     INPUT_EMAIL_PARAM_WRONG(2102,"输入email格式有误"),
     INPUT_TEL_PARAM_WRONG(2101,"输入电话格式有误"),
@@ -50,6 +53,8 @@ public enum ResultCodeEnum {
     INPUT_TEAM_NAME_CANT_MATCH(2108,"小组编号与小组名称对应错误"),
     INPUT_LEADER_ALREAY_EXIST(2109,"该小组已存在组长"),
     INPUT_ROLE_WRONG(2110,"输入角色有误"),
+
+
     FILE_WRONG_EMPTY(2201,"文件无法正常读取或文件为空，请按格式填写"),
     FILE_WRONG_STUDENTNO_REPEAT(2202,"文件中有学号已经存在平台中"),
     FILE_WRONG_LEADER_REPEAT(2203,"文件中该小组组长已经存在"),
@@ -76,35 +81,16 @@ public enum ResultCodeEnum {
     EQUIPMENT_ERCORD_CANT_RECOVER(2314,"无法撤销未处于正常使用状态的记录"),
 
     REPORT_NOT_EXIST(2315,"周报不存在"),
-
     REPORT_COMMENT_NOT_ADMIN(2316,"管理员无法评论非本组成员周报"),
     REPORT_COMMENT_NOT_LEADER(2317,"组长无法评论非本组成员周报"),
     REPORT_COMMENT_NOT_MEMBER(2318,"组员无法评论非自己周报"),
     REPORT_COMMENT_USER_WRONG(2319,"只可以撤回自己评论"),
-    SERVICE_ERROR(2012, "服务异常"),
-    DATA_ERROR(204, "数据异常"),
-    ILLEGAL_REQUEST(205, "非法请求"),
-    REPEAT_SUBMIT(206, "重复提交"),
-
-    LOGIN_AUTH(208, "未登陆"),
-    PERMISSION(209, "没有权限"),
-
-    ORDER_PRICE_ERROR(210, "订单商品价格变化"),
-    ORDER_STOCK_FALL(204, "订单库存锁定失败"),
-    CREATE_ORDER_FAIL(210, "创建订单失败"),
-
-    COUPON_GET(220, "优惠券已经领取"),
-    COUPON_LIMIT_GET(221, "优惠券已发放完毕"),
-
-    URL_ENCODE_ERROR( 216, "URL编码失败"),
-    ILLEGAL_CALLBACK_REQUEST_ERROR( 217, "非法回调请求"),
-    FETCH_ACCESSTOKEN_FAILD( 218, "获取accessToken失败"),
-    FETCH_USERINFO_ERROR( 219, "获取用户信息失败"),
+    REPORT_CANT_UPDATE_HERE(2320,"周报已提交过，如要修改，请进入历史周报的修改功能进行修改"),
 
 
-    SKU_LIMIT_ERROR(230, "购买个数不能大于限购个数"),
-    REGION_OPEN(240, "该区域已开通"),
-    REGION_NO_OPEN(240, "该区域未开通"),
+    RECOVER_FILE_WRONG(2401,"恢复数据失败"),
+    RECOVER_FILE_NOT_EXIT(2402,"指定备份数据不存在"),
+    BACKUP_FILE_WRONG(2403,"备份数据失败"),
     ;
 
     private Integer code;

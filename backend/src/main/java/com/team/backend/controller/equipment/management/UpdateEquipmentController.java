@@ -3,7 +3,7 @@ package com.team.backend.controller.equipment.management;
 
 import com.team.backend.config.result.Result;
 import com.team.backend.service.equipment.management.UpdateEquipmentService;
-import com.team.backend.dto.req.equipmentType;
+import com.team.backend.dto.excel.equipmentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

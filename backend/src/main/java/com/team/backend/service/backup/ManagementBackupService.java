@@ -15,4 +15,5 @@ public interface ManagementBackupService {
     Result addBackup(BackupRemarkType backupRemarkinfo);
 
     Result addRecover(String version);
+    Result getBackup();
 }

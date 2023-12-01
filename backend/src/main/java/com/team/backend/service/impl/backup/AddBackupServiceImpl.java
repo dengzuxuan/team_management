@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.dto.req.BackupRemarkType;
+import com.team.backend.dto.resp.BackupRecordType;
 import com.team.backend.mapper.BackupRecordMapper;
+import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.BackupRecord;
 import com.team.backend.pojo.User;
 import com.team.backend.service.backup.ManagementBackupService;
@@ -15,7 +17,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.team.backend.utils.common.consts.roleConst.*;
 
@@ -31,6 +35,8 @@ import static com.team.backend.utils.common.consts.roleConst.*;
 public class AddBackupServiceImpl implements ManagementBackupService {
     @Autowired
     BackupRecordMapper backupRecordMapper;
+    @Autowired
+    UserMapper userMapper;
     @Override
     public Result addBackup(BackupRemarkType backupRemarkinfo) {
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -83,5 +89,39 @@ public class AddBackupServiceImpl implements ManagementBackupService {
             return Result.build(null, codeEnum);
         }
         return Result.success(null);
+    }
+
+    @Override
+    public Result getBackup() {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
+        User user = loginUser.getUser();
+        if (user.getRole() != ADMINROLE) {
+            return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
+        }
+        List<BackupRecordType> backupRecordTypeList = new ArrayList<>();
+
+        List<BackupRecord> backupRecords = backupRecordMapper.selectList(null);
+        for (BackupRecord backupRecord:backupRecords){
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.select(
+                    User.class,info->!info.getColumn().equals("password_real")
+                            && !info.getColumn().equals("password")
+            ).eq("id",(backupRecord.getId()));
+            User user1 = userMapper.selectOne(queryWrapper);
+            BackupRecordType backupRecordType = new BackupRecordType(
+                    backupRecord.getId(),
+                    backupRecord.getStudentId(),
+                    user1,
+                    backupRecord.getVersion(),
+                    backupRecord.getRemark(),
+                    backupRecord.getCreateTime(),
+                    backupRecord.getUpdateTime()
+            );
+            backupRecordTypeList.add(backupRecordType);
+        }
+
+        return Result.success(backupRecordTypeList);
     }
 }

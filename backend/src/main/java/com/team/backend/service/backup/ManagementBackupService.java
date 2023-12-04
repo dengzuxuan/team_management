@@ -1,6 +1,7 @@
 package com.team.backend.service.backup;
 
 import com.team.backend.config.result.Result;
+import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.dto.req.BackupRemarkType;
 
 /**
@@ -13,7 +14,7 @@ import com.team.backend.dto.req.BackupRemarkType;
  */
 public interface ManagementBackupService {
     Result addBackup(BackupRemarkType backupRemarkinfo);
-
+    ResultCodeEnum backup(Integer userId, String remark);
     Result addRecover(String version);
     Result getBackup();
 }

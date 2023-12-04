@@ -3,6 +3,7 @@ package com.team.backend.service.impl.report.teamwork;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.team.backend.config.result.Result;
+import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.dto.req.ChangeWeeklyReportType;
 import com.team.backend.mapper.ReportTeamWorkMapper;
 import com.team.backend.mapper.UserMapper;
@@ -71,11 +72,14 @@ public class ManageTeamWorkServiceImpl implements ManageTeamWorkService {
         QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("student_no",getReportInfo.getStudentNo());
         User userfind = userMapper.selectOne(queryWrapper1);
+        if(userfind==null){
+            return Result.build(null, ResultCodeEnum.USER_NAME_NOT_EXIST);
+        }
 
         QueryWrapper<ReportTeamWork> queryWrapper = new QueryWrapper<>();
 
         if (startYear == endYear) {
-            queryWrapper.eq("student_no",userfind.getId()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
+            queryWrapper.eq("student_id",userfind.getId()).eq("year",startYear).ge("week",startWeek).le("week",endWeek);
         }else if(startYear<endYear){
             //跨年
             //eg:2022 23 - 2023 10

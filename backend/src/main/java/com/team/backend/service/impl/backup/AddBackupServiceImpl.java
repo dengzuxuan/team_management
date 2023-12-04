@@ -46,24 +46,10 @@ public class AddBackupServiceImpl implements ManagementBackupService {
         if(user.getRole()!=ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
-
-        String timestamp = String.valueOf(System.currentTimeMillis());
-
-        ResultCodeEnum codeEnum = ExecRemoteDocker.backup(timestamp);
-        if(codeEnum!=ResultCodeEnum.SUCCESS){
+        ResultCodeEnum codeEnum = backup(user.getId(), backupRemarkinfo.getRemark());
+        if(codeEnum != ResultCodeEnum.SUCCESS){
             return Result.build(null,codeEnum);
         }
-
-        Date now = new Date();
-        BackupRecord backupRecord = new BackupRecord(
-                null,
-                user.getId(),
-                timestamp,
-                backupRemarkinfo.getRemark(),
-                now,
-                now
-        );
-        backupRecordMapper.insert(backupRecord);
         return Result.success(null);
     }
 
@@ -123,5 +109,28 @@ public class AddBackupServiceImpl implements ManagementBackupService {
         }
 
         return Result.success(backupRecordTypeList);
+    }
+    @Override
+    public ResultCodeEnum backup(Integer userId, String remark){
+
+
+        String timestamp = String.valueOf(System.currentTimeMillis());
+
+        ResultCodeEnum codeEnum = ExecRemoteDocker.backup(timestamp);
+        if(codeEnum!=ResultCodeEnum.SUCCESS){
+            return codeEnum;
+        }
+
+        Date now = new Date();
+        BackupRecord backupRecord = new BackupRecord(
+                null,
+                userId,
+                timestamp,
+                remark,
+                now,
+                now
+        );
+        backupRecordMapper.insert(backupRecord);
+        return ResultCodeEnum.SUCCESS;
     }
 }

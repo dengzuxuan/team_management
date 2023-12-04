@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+import static com.fasterxml.jackson.core.io.NumberInput.parseInt;
+
 /**
  * <p>
  *  TODO
@@ -30,7 +32,9 @@ public class managementbackupController {
         return backupService.addRecover(version);
     }
     @GetMapping(value = "/v1/backup/management/getbackups/")
-    public Result getbackups(){
-        return backupService.getBackup();
+    public Result getbackups(@RequestParam Map<String,String> m1){
+        int pageNum = parseInt(m1.get("pageNum")) ;
+        int pageSize = parseInt(m1.get("pageSize"));
+        return backupService.getBackup(pageNum,pageSize);
     }
 }

@@ -1,6 +1,7 @@
 package com.team.backend.service.impl.backup;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.dto.req.BackupRemarkType;
@@ -8,7 +9,9 @@ import com.team.backend.dto.resp.BackupRecordType;
 import com.team.backend.mapper.BackupRecordMapper;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.BackupRecord;
+import com.team.backend.pojo.Equipment;
 import com.team.backend.pojo.User;
+import com.team.backend.pojo.WeeklyReport;
 import com.team.backend.service.backup.ManagementBackupService;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
 import com.team.backend.utils.ExecRemoteDocker;
@@ -17,9 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.team.backend.utils.common.consts.roleConst.*;
 
@@ -78,23 +79,27 @@ public class AddBackupServiceImpl implements ManagementBackupService {
     }
 
     @Override
-    public Result getBackup() {
+    public Result getBackup(int pageNum, int pageSize) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
         User user = loginUser.getUser();
+
         if (user.getRole() != ADMINROLE) {
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
+        Page<BackupRecord> page = new Page<>(pageNum,pageSize);
+        Page<BackupRecord> rowPages = new Page<>();
+        rowPages = backupRecordMapper.selectPage(page,null);
+
         List<BackupRecordType> backupRecordTypeList = new ArrayList<>();
 
-        List<BackupRecord> backupRecords = backupRecordMapper.selectList(null);
-        for (BackupRecord backupRecord:backupRecords){
+        for (BackupRecord backupRecord:rowPages.getRecords()){
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.select(
                     User.class,info->!info.getColumn().equals("password_real")
                             && !info.getColumn().equals("password")
-            ).eq("id",(backupRecord.getId()));
+            ).eq("id",(backupRecord.getStudentId()));
             User user1 = userMapper.selectOne(queryWrapper);
             BackupRecordType backupRecordType = new BackupRecordType(
                     backupRecord.getId(),
@@ -107,8 +112,13 @@ public class AddBackupServiceImpl implements ManagementBackupService {
             );
             backupRecordTypeList.add(backupRecordType);
         }
+        Map<String,Object> res = new HashMap<>();
 
-        return Result.success(backupRecordTypeList);
+        res.put("backupRecords",backupRecordTypeList);
+        res.put("total",rowPages.getTotal());
+        res.put("size",rowPages.getSize());
+        res.put("current",rowPages.getCurrent());
+        return Result.success(res);
     }
     @Override
     public ResultCodeEnum backup(Integer userId, String remark){

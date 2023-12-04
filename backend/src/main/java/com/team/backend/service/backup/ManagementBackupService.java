@@ -16,5 +16,5 @@ public interface ManagementBackupService {
     Result addBackup(BackupRemarkType backupRemarkinfo);
     ResultCodeEnum backup(Integer userId, String remark);
     Result addRecover(String version);
-    Result getBackup();
+    Result getBackup(int pageNum, int pageSize);
 }

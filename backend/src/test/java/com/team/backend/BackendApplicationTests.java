@@ -17,10 +17,10 @@ class BackendApplicationTests {
 	ManagementBackupService backupService;
 	@Test
 	void contextLoads() {
-		SimpleDateFormat formatter= new SimpleDateFormat("yyyy年MM月dd");
-		Date date = new Date(System.currentTimeMillis());
-		String dateFormatted = formatter.format(date);
-		backupService.backup(null,dateFormatted);
+		SimpleDateFormat formatter= new SimpleDateFormat("yyyy年MM月dd日");
+//		Date date = new Date(System.currentTimeMillis());
+//		String dateFormatted = formatter.format(date) + "12点 [自动备份]";
+//		backupService.backup(null,dateFormatted);
 //		String timestamp = String.valueOf(System.currentTimeMillis());
 //		System.out.println("time:"+timestamp);
 //		ExecRemoteDocker.backup(timestamp);

@@ -20,7 +20,7 @@ public class backupCron {
     public void backupDaily() {
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy年MM月dd");
         Date date = new Date(System.currentTimeMillis());
-        String dateFormatted = formatter.format(date);
+        String dateFormatted = formatter.format(date) + "12点 [自动备份]";
         backupService.backup(null,dateFormatted);
     }
 }

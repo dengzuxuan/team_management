@@ -90,7 +90,9 @@ public class AddBackupServiceImpl implements ManagementBackupService {
         }
         Page<BackupRecord> page = new Page<>(pageNum,pageSize);
         Page<BackupRecord> rowPages = new Page<>();
-        rowPages = backupRecordMapper.selectPage(page,null);
+        QueryWrapper<BackupRecord> queryWrapperrecord = new QueryWrapper<>();
+        queryWrapperrecord.orderByDesc("create_time");
+        rowPages = backupRecordMapper.selectPage(page,queryWrapperrecord);
 
         List<BackupRecordType> backupRecordTypeList = new ArrayList<>();
 

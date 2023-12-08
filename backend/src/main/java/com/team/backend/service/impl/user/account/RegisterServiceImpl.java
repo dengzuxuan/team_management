@@ -62,10 +62,12 @@ public class RegisterServiceImpl implements RegisterService {
             return Result.build(null,ResultCodeEnum.USER_NAME_ALREADY_EXIST);
         }
 
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
         User newuser = new User();
         newuser.setStudentNo(user.getStudentNo());
         newuser.setRole(user.getRole());
-        newuser.setPassword(user.getPassword());
+        newuser.setPasswordReal(user.getPassword());
+        newuser.setPassword(encodedPassword);
         userMapper.insert(newuser);
 
         return Result.success(null);

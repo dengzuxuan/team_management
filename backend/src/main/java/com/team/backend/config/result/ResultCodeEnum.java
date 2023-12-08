@@ -22,6 +22,7 @@ public enum ResultCodeEnum {
     PASSWORD_NOT_EQUAL(2007,"两次密码输入不等"),
     PASSWORD_PARAM_WRONG(2008,"密码格式有误"),
     ROLE_PARAM_WRONG(2009,"角色参数有误"),
+
     ROLE_AUTHORIZATION_NOT_ENOUGHT(2010,"角色权限不足"),
     USER_ALREADY_IN_TEAM(2011,"该用户已加入小组，无法设为组长"),
     USER_NOT_IN_TEAM(2012,"该用户目前未加入小组"),

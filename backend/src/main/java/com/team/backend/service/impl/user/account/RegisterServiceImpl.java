@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.team.backend.utils.common.consts.roleConst.*;
 import static java.lang.Integer.parseInt;
@@ -38,6 +40,36 @@ public class RegisterServiceImpl implements RegisterService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RegisterExcelServiceImpl registerExcelService;
+
+    @Override
+    public Result registerAdmin(RegisterUserType user) {
+        if(user.getStudentNo()==null){
+            return Result.build(null,ResultCodeEnum.USER_NAME_NOT_EMPTY);
+        }
+        if(user.getPassword()==null){
+            return Result.build(null,ResultCodeEnum.PASSWORD_NOT_EMPTY);
+        }
+
+        if(user.getRole() != ADMINROLE){
+            return Result.build(null,ResultCodeEnum.ROLE_PARAM_WRONG);
+        }
+
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("student_no",user.getStudentNo());
+        User userFind = userMapper.selectOne(queryWrapper);
+        if(userFind!=null){
+            return Result.build(null,ResultCodeEnum.USER_NAME_ALREADY_EXIST);
+        }
+
+        User newuser = new User();
+        newuser.setStudentNo(user.getStudentNo());
+        newuser.setRole(user.getRole());
+        newuser.setPassword(user.getPassword());
+        userMapper.insert(newuser);
+
+        return Result.success(null);
+    }
 
     @Override
     public Result register(UserType user) {

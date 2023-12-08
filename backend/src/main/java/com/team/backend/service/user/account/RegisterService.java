@@ -5,6 +5,7 @@ import com.team.backend.dto.req.RegisterUserType;
 import com.team.backend.utils.common.excelType.UserType;
 
 public interface RegisterService {
+    Result registerAdmin(RegisterUserType user);
     Result register(UserType user);
     Result registermore(UserType[] users);
 }

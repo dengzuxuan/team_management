@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/v1/user/account/login/", "/v1/user/account/register/").permitAll() //这两个是永久公开的
+                .antMatchers("/v1/user/account/login/", "/v1/user/account/register/","/v1/user/account/registeradmin/").permitAll() //这两个是永久公开的
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);

@@ -15,12 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterUserType {
-        private String username;
         private String studentNo;
-        private String tel;
-        private String email;
-        private String cardNo;
-        private String teamNo;
-        private String teamName;
+        private Integer role;
         private String password;
 }

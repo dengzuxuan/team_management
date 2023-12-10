@@ -3,20 +3,23 @@ package com.team.backend.utils;
 import java.io.*;
 
 import com.jcraft.jsch.*;
+import com.team.backend.config.RemoteConfig;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+
+@Component
 public class ExecRemoteDocker {
-    static String host = "8.140.38.47";
-    static String user = "root";
-    static String password = "18611251246Deng!";
-    public static ResultCodeEnum backup(String version) {
-        String command = "cd /usr/Colin/team_management && ./backup.sh "+version;
+    public static ResultCodeEnum backup(RemoteConfig remoteConfig,String version) {
+        String command = "cd "+remoteConfig.getBackupDir()+" && ./backup.sh "+version;
 
         try {
             JSch jsch = new JSch();
-            Session session = jsch.getSession(user, host, 22);
-            session.setPassword(password);
+            Session session = jsch.getSession(remoteConfig.getUsername(), remoteConfig.getIp(), 22);
+            session.setPassword(remoteConfig.getPassword());
 
             // 配置连接
             java.util.Properties config = new java.util.Properties();
@@ -51,13 +54,13 @@ public class ExecRemoteDocker {
         return ResultCodeEnum.SUCCESS;
     }
 
-    public static ResultCodeEnum recover(String version) {
-        String command = "cd /usr/Colin/team_management && ./recover.sh "+version;
+    public static ResultCodeEnum recover(RemoteConfig remoteConfig,String version) {
+        String command = "cd "+remoteConfig.getBackupDir()+" && ./recover.sh "+version;
 
         try {
             JSch jsch = new JSch();
-            Session session = jsch.getSession(user, host, 22);
-            session.setPassword(password);
+            Session session = jsch.getSession(remoteConfig.getUsername(), remoteConfig.getIp(), 22);
+            session.setPassword(remoteConfig.getPassword());
 
             // 配置连接
             java.util.Properties config = new java.util.Properties();

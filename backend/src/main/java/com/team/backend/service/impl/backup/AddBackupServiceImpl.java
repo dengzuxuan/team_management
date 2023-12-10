@@ -2,6 +2,7 @@ package com.team.backend.service.impl.backup;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.team.backend.config.RemoteConfig;
 import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.dto.req.BackupRemarkType;
@@ -20,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 import static com.team.backend.utils.common.consts.roleConst.*;
@@ -38,6 +40,8 @@ public class AddBackupServiceImpl implements ManagementBackupService {
     BackupRecordMapper backupRecordMapper;
     @Autowired
     UserMapper userMapper;
+    @Resource
+    RemoteConfig remoteConfig;
     @Override
     public Result addBackup(BackupRemarkType backupRemarkinfo) {
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -71,7 +75,7 @@ public class AddBackupServiceImpl implements ManagementBackupService {
             return Result.build(null, ResultCodeEnum.RECOVER_FILE_NOT_EXIT);
         }
 
-        ResultCodeEnum codeEnum = ExecRemoteDocker.recover(version);
+        ResultCodeEnum codeEnum = ExecRemoteDocker.recover(remoteConfig,version);
         if (codeEnum != ResultCodeEnum.SUCCESS) {
             return Result.build(null, codeEnum);
         }
@@ -124,11 +128,8 @@ public class AddBackupServiceImpl implements ManagementBackupService {
     }
     @Override
     public ResultCodeEnum backup(Integer userId, String remark){
-
-
         String timestamp = String.valueOf(System.currentTimeMillis());
-
-        ResultCodeEnum codeEnum = ExecRemoteDocker.backup(timestamp);
+        ResultCodeEnum codeEnum = ExecRemoteDocker.backup(remoteConfig,timestamp);
         if(codeEnum!=ResultCodeEnum.SUCCESS){
             return codeEnum;
         }

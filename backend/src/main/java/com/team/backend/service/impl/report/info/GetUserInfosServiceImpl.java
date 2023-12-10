@@ -51,7 +51,7 @@ public class GetUserInfosServiceImpl implements GetUserInfosService {
             );
         }else {
             //组长
-            queryWrapper.eq("leader_no",user.getStudentNo()).ne("role",1).select(
+            queryWrapper.eq("leader_id",user.getId()).ne("role",1).select(
                     User.class,info->!info.getColumn().equals("password_real")
                             && !info.getColumn().equals("password")
             );

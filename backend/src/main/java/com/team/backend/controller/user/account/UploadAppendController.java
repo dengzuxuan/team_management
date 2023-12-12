@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.team.backend.utils.OssUtil.uploadOss;
-
 @RestController
 public class UploadAppendController {
     @Autowired

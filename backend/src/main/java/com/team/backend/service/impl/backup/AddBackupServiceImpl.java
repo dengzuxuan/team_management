@@ -10,12 +10,10 @@ import com.team.backend.dto.resp.BackupRecordType;
 import com.team.backend.mapper.BackupRecordMapper;
 import com.team.backend.mapper.UserMapper;
 import com.team.backend.pojo.BackupRecord;
-import com.team.backend.pojo.Equipment;
 import com.team.backend.pojo.User;
-import com.team.backend.pojo.WeeklyReport;
 import com.team.backend.service.backup.ManagementBackupService;
 import com.team.backend.service.impl.utils.UserDetailsImpl;
-import com.team.backend.utils.ExecRemoteDocker;
+import com.team.backend.utils.remote.ExecRemoteDockerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,7 +73,7 @@ public class AddBackupServiceImpl implements ManagementBackupService {
             return Result.build(null, ResultCodeEnum.RECOVER_FILE_NOT_EXIT);
         }
 
-        ResultCodeEnum codeEnum = ExecRemoteDocker.recover(remoteConfig,version);
+        ResultCodeEnum codeEnum = ExecRemoteDockerUtils.recover(remoteConfig,version);
         if (codeEnum != ResultCodeEnum.SUCCESS) {
             return Result.build(null, codeEnum);
         }
@@ -129,7 +127,7 @@ public class AddBackupServiceImpl implements ManagementBackupService {
     @Override
     public ResultCodeEnum backup(Integer userId, String remark){
         String timestamp = String.valueOf(System.currentTimeMillis());
-        ResultCodeEnum codeEnum = ExecRemoteDocker.backup(remoteConfig,timestamp);
+        ResultCodeEnum codeEnum = ExecRemoteDockerUtils.backup(remoteConfig,timestamp);
         if(codeEnum!=ResultCodeEnum.SUCCESS){
             return codeEnum;
         }

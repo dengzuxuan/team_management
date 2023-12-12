@@ -1,20 +1,15 @@
 package com.team.backend;
 
-import cn.hutool.core.util.RandomUtil;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import com.team.backend.config.result.ResultCodeEnum;
 import com.team.backend.service.backup.ManagementBackupService;
-import com.team.backend.utils.ExecRemoteDocker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.InputStream;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @SpringBootTest
 class BackendApplicationTests {
@@ -29,8 +24,8 @@ class BackendApplicationTests {
 //		backupService.backup(null,dateFormatted);
 //		String timestamp = String.valueOf(System.currentTimeMillis());
 //		System.out.println("time:"+timestamp);
-//		ExecRemoteDocker.backup(timestamp);
-		//ExecRemoteDocker.recover("1701432493062");
+//		ExecRemoteDockerUtils.backup(timestamp);
+		//ExecRemoteDockerUtils.recover("1701432493062");
 		try {
 			JSch jsch = new JSch();
 			Session session = jsch.getSession("chendian", "10.126.56.98", 22);

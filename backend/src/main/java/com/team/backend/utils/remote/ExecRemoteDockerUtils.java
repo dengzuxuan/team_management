@@ -1,18 +1,14 @@
-package com.team.backend.utils;
+package com.team.backend.utils.remote;
 
 import java.io.*;
 
 import com.jcraft.jsch.*;
 import com.team.backend.config.RemoteConfig;
-import com.team.backend.config.result.Result;
 import com.team.backend.config.result.ResultCodeEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 @Component
-public class ExecRemoteDocker {
+public class ExecRemoteDockerUtils {
     public static ResultCodeEnum backup(RemoteConfig remoteConfig,String version) {
         String command = "cd "+remoteConfig.getBackupDir()+" && ./backup.sh "+version;
 

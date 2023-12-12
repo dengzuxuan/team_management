@@ -26,4 +26,6 @@ public class RemoteConfig {
     private String password;
     @Value("${remote.backupdir}")
     private String backupDir;
+    @Value("${remote.appenddir}")
+    private String appendDir;
 }

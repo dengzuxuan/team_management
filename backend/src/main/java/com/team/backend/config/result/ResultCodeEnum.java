@@ -92,6 +92,8 @@ public enum ResultCodeEnum {
     RECOVER_FILE_WRONG(2401,"恢复数据失败"),
     RECOVER_FILE_NOT_EXIT(2402,"指定备份数据不存在"),
     BACKUP_FILE_WRONG(2403,"备份数据失败"),
+
+    APPEND_FILE_INPUT_WRONG(2404,"上传文件失败"),
     ;
 
     private Integer code;

@@ -23,11 +23,11 @@ import java.util.Map;
  */
 @Service
 public class ManagementAppendServiceImpl implements ManagementAppendService {
-    private static final String APPEND_PREFIX = "http://10.126.62.69:9999/append/";
     @Resource
     RemoteConfig remoteConfig;
     @Override
     public Result addAppend(MultipartFile file) {
+        String APPEND_PREFIX = "http://"+remoteConfig.getIp()+":"+remoteConfig.getPort()+"/append/";
         String fileName = System.currentTimeMillis()+"_"+file.getOriginalFilename();
         try {
             //上传文件

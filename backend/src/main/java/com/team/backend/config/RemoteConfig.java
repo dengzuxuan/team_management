@@ -28,4 +28,6 @@ public class RemoteConfig {
     private String backupDir;
     @Value("${remote.appenddir}")
     private String appendDir;
+    @Value("${remote.port}")
+    private String port;
 }

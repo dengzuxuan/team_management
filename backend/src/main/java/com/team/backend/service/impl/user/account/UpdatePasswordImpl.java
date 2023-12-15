@@ -55,7 +55,7 @@ public class UpdatePasswordImpl implements UpdatePasswordService {
     }
 
     @Override
-    public Result adminUpdatePassword(String studentNo, String newPassword) {
+    public Result adminUpdatePassword(String studentNo) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
@@ -63,8 +63,8 @@ public class UpdatePasswordImpl implements UpdatePasswordService {
         if(loginuser.getRole() != ADMINROLE){
             return Result.build(null, ResultCodeEnum.ROLE_AUTHORIZATION_NOT_ENOUGHT);
         }
-        if(newPassword.isEmpty()){
-            return Result.build(null,ResultCodeEnum.USER_PASSWORD_WRONG);
+        if(studentNo.isEmpty()){
+            return Result.build(null,ResultCodeEnum.INPUT_STUDENTNO_IS_NULL);
         }
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -77,6 +77,8 @@ public class UpdatePasswordImpl implements UpdatePasswordService {
         if(!Objects.equals(user.getAdminNo(), loginuser.getStudentNo())){
             return Result.build(null,ResultCodeEnum.USER_ADMIN_WRONG);
         }
+
+        String newPassword =studentNo.substring(studentNo.length() - 6);
 
         String encodedPassword = passwordEncoder.encode(newPassword);
 

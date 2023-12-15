@@ -8,7 +8,10 @@ import com.team.backend.service.user.account.UpdatePasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 public class UpdatePasswordController {
@@ -25,11 +28,11 @@ public class UpdatePasswordController {
         );
     }
 
-    @PostMapping(value = "/v1/user/account/adminupdatepassword/",consumes="application/json")
-    public Result adminUpdatePassword(@RequestBody AdminUpdatePassword updateInfo){
+    @PostMapping(value = "/v1/user/account/adminupdatepassword/")
+    public Result adminUpdatePassword(@RequestParam Map<String,String> map){
+        String studentNo = map.get("studentNo");
         return updatePasswordService.adminUpdatePassword(
-                updateInfo.getStudentNo(),
-                updateInfo.getNewPassword()
+                studentNo
         );
     }
 
